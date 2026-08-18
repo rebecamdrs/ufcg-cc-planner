@@ -35,6 +35,7 @@ const styles = {
     lista: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.8rem'
+        gap: '0.8rem',
+        flexGrow: 1
     }
 };

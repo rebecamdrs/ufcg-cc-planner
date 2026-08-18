@@ -14,13 +14,13 @@
 
 .coluna-periodo {
   min-width: 240px;
+  min-height: 90vh;
   background-color: #f5f5f5;
   border-radius: 8px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  min-height: 300px;
 }
 
 .card-cadeira {
@@ -30,4 +30,33 @@
   background-color: #ffffff;
   cursor: grab;
   user-select: none;
+}
+
+.rodape-autores {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: #ffffff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e0e0e0;
+  font-size: 0.85rem;
+  color: #555;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rodape-autores a {
+  color: #0969da;                
+  text-decoration: none;        
+  font-weight: 600;              
+  transition: color 0.2s ease;   
+}
+
+.rodape-autores a:hover {
+  text-decoration: underline;    
+  color: #033d8b;                
 }
