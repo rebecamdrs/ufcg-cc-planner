@@ -16,10 +16,16 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira
 
       <div style={styles.lista} onDragOver={(e) => e.preventDefault()} // permite o drop na lista
         > 
-        {nomesCadeiras.map((nome) => {
-          const cadeira = buscarCadeira(nome); //localiza cadeira
-          return <CardCadeira key={nome} cadeira={cadeira} />; //retorna objeto de card cadeira
-        })}
+        {nomesCadeiras.map((nome,index) => {
+         const cadeira = buscarCadeira(nome); // localiza cadeira
+         return (
+       <CardCadeira 
+       key={nome} 
+       cadeira={cadeira} 
+       excesso={index >= 6} 
+    />
+  );
+})}
       </div>
     </div>
   );

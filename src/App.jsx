@@ -25,23 +25,41 @@ function App() {
 
   // move cadeira para novo periodo
   function moverCadeira(nomeCadeira, novoPeriodo) {
-    const periodoDestino = Number(novoPeriodo); //transforma periodo destino em numero
+  const periodoDestino = Number(novoPeriodo);
 
-    setGrade((gradeAtual) => {
-      const novaGrade = {};
-      // percorre cada periodo dentro da grade atual:
-      for (const p in gradeAtual) {
-        //pega periodo, acessa lista de materias, cria nova lista filtrando a cadeira que foi movida
-        novaGrade[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
-      }
-      //insere a materia nova no periodo
-      if (novaGrade[periodoDestino]) {
-        novaGrade[periodoDestino] = [...novaGrade[periodoDestino], nomeCadeira];
-      }
+  setGrade((gradeAtual) => {
+    const rascunho = {};
+    for (const p in gradeAtual) {
+      rascunho[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
+    }
 
-      return novaGrade;
+    if (!rascunho[periodoDestino]) {
+      rascunho[periodoDestino] = [];
+    }
+    rascunho[periodoDestino].push(nomeCadeira);
+
+    const periodosComMaterias = Object.keys(rascunho)
+      .map(Number)
+      .filter((p) => rascunho[p].length > 0)
+      .sort((a, b) => a - b);
+    const totalPeriodos = Math.max(9, periodosComMaterias.length);
+    const limitePeriodos = Math.min(totalPeriodos, 14); 
+
+    const novaGrade = {};
+    
+    for (let i = 1; i <= limitePeriodos; i++) {
+      novaGrade[i] = [];
+    }
+    periodosComMaterias.forEach((p, index) => {
+      const novoIndice = index + 1;
+      if (novoIndice <= 14) {
+        novaGrade[novoIndice] = rascunho[p];
+      }
     });
-  }
+
+    return novaGrade;
+  });
+}
 
   return (
     <div className="container-principal">
@@ -57,9 +75,27 @@ function App() {
             onMoverCadeira={moverCadeira}
           />
         ))}
+
+  {Object.keys(grade).length < 14 && (
+  <div
+    className="zona-novo-periodo"
+    onDragOver={(e) => e.preventDefault()}
+    onDrop={(e) => {
+      e.preventDefault();
+      const nomeCadeira = e.dataTransfer.getData("text/plain");
+      if (nomeCadeira) {
+        const periodosOcupados = Object.entries(grade).filter(([_, lista]) => lista.length > 0).length;
+        const proximoPeriodo = Math.max(periodosOcupados + 1, 1);
+        moverCadeira(nomeCadeira, proximoPeriodo);
+      }
+    }}
+  >
+    <span>+ Novo período</span>
+  </div>
+)}
       </div>
       <footer className="rodape-autores">
-        Criado por:{' '}
+        Criado por{' '}
         <a
           href="https://github.com/rebecamdrs"
           target="_blank"
