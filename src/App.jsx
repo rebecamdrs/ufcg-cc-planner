@@ -3,7 +3,7 @@ import { MAPA_PERIODOS } from "./constants/mapa_periodos";
 import { ColunaPeriodo } from "./components/ColunaPeriodo";
 import "./App.css";
 
-function App() {
+export function App() {
   const [cadeiras, setCadeiras] = useState([]);
   const [grade, setGrade] = useState(MAPA_PERIODOS);
 
@@ -63,24 +63,14 @@ function App() {
       </div>
       <footer className="rodape-autores">
         Criado por:{' '}
-        <a
-          href="https://github.com/rebecamdrs"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/rebecamdrs" target="_blank" rel="noopener noreferrer">
           Rebeca Medeiros
         </a>{' '}
         e{' '}
-        <a
-          href="https://github.com/roanmotta"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/roanmotta" target="_blank" rel="noopener noreferrer">
           Roan Motta
         </a>
       </footer>
     </div>
   );
 }
-
-export default App;
