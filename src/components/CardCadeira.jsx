@@ -3,7 +3,7 @@ export function CardCadeira({ cadeira }) {
 
   return (
     <div
-      style={styles.card}
+      className="card-cadeira"
       draggable="true" //torna o elemento arrastável
       onDragStart={(e) => { //quando user começa a arrastar, guarda a cadeira 
         e.dataTransfer.setData("text/plain", cadeira.nome); // salva nome da cadeira
@@ -18,12 +18,6 @@ export function CardCadeira({ cadeira }) {
 }
 
 const styles = {
-  card: {
-    padding: '0.8rem',
-    border: '1px solid #e0e0e0',
-    borderRadius: '6px',
-    backgroundColor: '#ffffff'
-  },
   titulo: {
     fontSize: '0.9rem',
     display: 'block',

@@ -2,8 +2,7 @@ import { CardCadeira } from "./CardCadeira";
 
 export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira, onMoverCadeira }) {
   return (
-    <div
-      style={styles.coluna}
+    <div className="coluna-periodo"
       onDragOver={(e) => e.preventDefault()} //quando arrastado sobre, permite o drop (previne padrao)
       onDrop={(e) => {
         e.preventDefault(); //quando dropado, mesma coisa
@@ -27,24 +26,15 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira
 }
 
 const styles = {
-  coluna: {
-    minWidth: '215px',
-    minHeight: '80vh',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '8px',
-    padding: '1rem',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  titulo: {
-    margin: 0,
-    borderBottom: '2px solid #ddd',
-    paddingBottom: '0.5rem'
-  },
-  lista: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.8rem'
-  }
+    titulo: {
+        fontSize: '1.1rem',
+        marginBottom: '0.8rem',
+        borderBottom: '2px solid #ddd',
+        paddingBottom: '0.4rem'
+    },
+    lista: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.8rem'
+    }
 };
