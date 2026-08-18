@@ -1,6 +1,8 @@
-export function CardCadeira({ cadeira }) {
+export function CardCadeira({ cadeira, periodo }) {
+    if (!cadeira) return null;
+
     return (
-        <div style={styles.card}>
+        <div className="card-cadeira">
             <strong style={styles.titulo}>{cadeira.nome}</strong>
             <span style={styles.detalhes}>
                 {cadeira.creditos} cr | {cadeira.carga_horaria}h
@@ -10,12 +12,6 @@ export function CardCadeira({ cadeira }) {
 }
 
 const styles = {
-    card: {
-        padding: '0.8rem',
-        border: '1px solid #e0e0e0',
-        borderRadius: '6px',
-        backgroundColor: '#ffffff'
-    },
     titulo: {
         fontSize: '0.9rem',
         display: 'block',

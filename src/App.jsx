@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"; // Hooks
 import { MAPA_PERIODOS } from "./constants/mapa_periodos";
 import { ColunaPeriodo } from "./components/ColunaPeriodo";
+import "./App.css";
 
 function App() {
     const [cadeiras, setCadeiras] = useState([]);
@@ -20,10 +21,10 @@ function App() {
     }
 
     return (
-        <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+        <div className="container-principal">
             <h1>Cadeiras CC</h1>
 
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', overflowX: 'auto', alignItems: 'flex-start' }}>
+            <div className="container-periodos" >
                 {Object.entries(MAPA_PERIODOS).map(([periodo, nomesCadeiras]) => (
                     <ColunaPeriodo
                         key={periodo}

@@ -1,14 +1,20 @@
 import { CardCadeira } from "./CardCadeira";
 
-export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras, buscarCadeira }) {
+export function ColunaPeriodo({numeroPeriodo, nomesCadeiras, buscarCadeira}) {
     return (
-        <div style={styles.coluna}>
+        <div className="coluna-periodo">
             <h3 style={styles.titulo}>{numeroPeriodo}º Período</h3>
 
             <div style={styles.lista}>
                 {nomesCadeiras.map((nome, index) => {
                     const cadeira = buscarCadeira(nome);
-                    return <CardCadeira key={index} cadeira={cadeira} />;
+                    return (
+                        <CardCadeira
+                            key={index}
+                            cadeira={cadeira}
+                            periodo={numeroPeriodo}
+                        />
+                    );
                 })}
             </div>
         </div>
@@ -16,19 +22,11 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras, buscarCadeira }) {
 }
 
 const styles = {
-    coluna: {
-        minWidth: '240px',
-        backgroundColor: '#f5f5f5',
-        borderRadius: '8px',
-        padding: '1rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem'
-    },
     titulo: {
-        margin: 0,
+        fontSize: '1.1rem',
+        marginBottom: '0.8rem',
         borderBottom: '2px solid #ddd',
-        paddingBottom: '0.5rem'
+        paddingBottom: '0.4rem'
     },
     lista: {
         display: 'flex',
