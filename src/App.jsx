@@ -4,12 +4,10 @@ import { ColunaPeriodo } from "./components/ColunaPeriodo";
 import "./App.css";
 
 function App() {
-  //cadeiras iniciais
   const [cadeiras, setCadeiras] = useState([]);
-  // grade inicial
   const [grade, setGrade] = useState(MAPA_PERIODOS);
 
-  // Busca as cadeiras do json externo oficial do ppc-2023-em-dados do Prof. Dalton Serey, atualizando constantemente
+  // Busca as cadeiras do json do git
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
       .then(resposta => resposta.json())
@@ -17,7 +15,7 @@ function App() {
       .catch(erro => console.error("Erro ao carregar dados:", erro));
   }, []);
 
-  // busca cadeira a partir do nome, caso nao encontre retorna objeto padrao
+  // busca cadeira a partir do nome
   function buscarCadeira(nome) {
     const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
     return cadeiras.find(c => c.nome === nome) || padrao;
@@ -29,7 +27,7 @@ function App() {
 
     setGrade((gradeAtual) => {
       const novaGrade = {};
-      // percorre cada periodo dentro da grade atual:
+      // percorre cada periodo dentro da grade atual
       for (const p in gradeAtual) {
         //pega periodo, acessa lista de materias, cria nova lista filtrando a cadeira que foi movida
         novaGrade[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
