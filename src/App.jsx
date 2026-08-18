@@ -4,7 +4,7 @@ import { ColunaPeriodo } from "./components/ColunaPeriodo";
 import "./App.css";
 
 function App() {
-    //cadeiras iniciais
+  //cadeiras iniciais
   const [cadeiras, setCadeiras] = useState([]);
   // grade inicial
   const [grade, setGrade] = useState(MAPA_PERIODOS);
@@ -45,13 +45,18 @@ function App() {
 
   return (
     <div className="container-principal">
-      <h1>Cadeiras CC</h1>
+      <header className="header-app">
+        <div>
+          <span className="tag-header">Matriz Curricular</span>
+          <h1 className="titulo-principal">Planner CC</h1>
+        </div>
+      </header>
 
       <div className="container-periodos">
         {Object.entries(grade).map(([periodo, nomesCadeiras]) => (
           <ColunaPeriodo
             key={periodo}
-            numeroPeriodo={Number(periodo)} 
+            numeroPeriodo={Number(periodo)}
             nomesCadeiras={nomesCadeiras}
             buscarCadeira={buscarCadeira}
             onMoverCadeira={moverCadeira}
