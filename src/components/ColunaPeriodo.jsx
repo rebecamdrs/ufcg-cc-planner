@@ -1,8 +1,15 @@
 import { CardCadeira } from "./CardCadeira";
 
-export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira, onMoverCadeira, cadeiraSelecionada, setCadeiraSelecionada }) {
+export function ColunaPeriodo({ 
+  numeroPeriodo, 
+  nomesCadeiras = [], 
+  buscarCadeira, 
+  onMoverCadeira, 
+  cadeiraSelecionada, 
+  setCadeiraSelecionada 
+}) {
 
-  // Busca todas as cadeiras da coluna para calcular os créditos
+  // Busca todas as cadeiras da coluna para renderização e cálculos
   const cadeirasColuna = nomesCadeiras
     .map((nome) => buscarCadeira(nome))
     .filter(Boolean);
@@ -19,19 +26,20 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira
 
       <div
         className="coluna-periodo"
-        onDragOver={(e) => e.preventDefault()} //quando arrastado sobre, permite o drop (previne padrao)
+        onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
-          e.preventDefault(); //quando dropado, mesma coisa
-          const nomeCadeira = e.dataTransfer.getData("text/plain"); //salva nome da cadeira
-          if (onMoverCadeira && nomeCadeira) { //se func existir e nome da cadeira existir, move para o periodo
-            onMoverCadeira(nomeCadeira, numeroPeriodo)
+          e.preventDefault();
+          const nomeCadeira = e.dataTransfer.getData("text/plain");
+          if (onMoverCadeira && nomeCadeira) {
+            onMoverCadeira(nomeCadeira, numeroPeriodo);
           }
         }}
       >
-        {cadeirasColuna.map((cadeira) => (
+        {cadeirasColuna.map((cadeira, index) => (
           <CardCadeira
-            key={cadeira.nome || cadeira.id}
+            key={cadeira.nome || index}
             cadeira={cadeira}
+            excesso={index >= 6}
             cadeiraSelecionada={cadeiraSelecionada}
             setCadeiraSelecionada={setCadeiraSelecionada}
           />
@@ -39,5 +47,5 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira
       </div>
 
     </div>
-  )
+  );
 }

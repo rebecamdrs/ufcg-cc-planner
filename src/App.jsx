@@ -113,5 +113,5 @@ export default function App() {
                 </a>
             </footer>
         </div>
-    )
+    );
 }
