@@ -9,7 +9,7 @@ export function ColunaPeriodo({
   setCadeiraSelecionada 
 }) {
 
-  // Busca todas as cadeiras da coluna para renderização e cálculos
+  // busca todas as cadeiras da coluna para renderização e calculos
   const cadeirasColuna = nomesCadeiras
     .map((nome) => buscarCadeira(nome))
     .filter(Boolean);

@@ -1,27 +1,44 @@
-import { useEffect, useState } from "react";
-import { MAPA_PERIODOS } from "./constants/mapa_periodos";
-import { ColunaPeriodo } from "./components/ColunaPeriodo";
-import "./App.css";
+import { useEffect, useState } from "react"
+import { MAPA_PERIODOS } from "./constants/mapa_periodos"
+import { ColunaPeriodo } from "./components/ColunaPeriodo"
+import "./App.css"
+import iconeLixeira from "./assets/icone-lixeira.svg"
 
 export default function App() {
-    const [cadeiras, setCadeiras] = useState([]);
-    const [grade, setGrade] = useState(MAPA_PERIODOS);
+    const [cadeiras, setCadeiras] = useState([])
+
+    // inicializa a grade vendo se tem alguma no localStorage antes
+    const [grade, setGrade] = useState(() => {
+        const gradeSalva = localStorage.getItem("grade_planejada")
+        return gradeSalva ? JSON.parse(gradeSalva) : MAPA_PERIODOS
+    })
+
+    // efeito que é ativado sempre q a grade mudar
+    useEffect(() => {
+        localStorage.setItem("grade_planejada", JSON.stringify(grade)); // guarda a grade no storage
+    }, [grade])
+
+    function resetarGrade() {
+        if (confirm("Deseja restaurar a matriz curricular padrão?")) {
+            setGrade(MAPA_PERIODOS)
+        }
+    }
 
     // guarda a cadeira que o mouse ta em cima
-    const [cadeiraSelecionada, setCadeiraSelecionada] = useState(null);
+    const [cadeiraSelecionada, setCadeiraSelecionada] = useState(null)
 
     // Busca as cadeiras do json do git
     useEffect(() => {
         fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
             .then(resposta => resposta.json())
             .then(dados => setCadeiras(dados))
-            .catch(erro => console.error("Erro ao carregar dados:", erro));
-    }, []);
+            .catch(erro => console.error("Erro ao carregar dados:", erro))
+    }, [])
 
     // busca cadeira a partir do nome
     function buscarCadeira(nome) {
-        const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
-        return cadeiras.find(c => c.nome === nome) || padrao;
+        const padrao = { nome: nome, creditos: '-', carga_horaria: '-' }
+        return cadeiras.find(c => c.nome === nome) || padrao
     }
 
     // move cadeira para novo periodo
@@ -68,6 +85,10 @@ export default function App() {
                     <span className="tag-header">Matriz Curricular</span>
                     <h1 className="titulo-principal">Planner CC</h1>
                 </div>
+                <button className="botao-reset" onClick={resetarGrade}>
+                    <img src={iconeLixeira} alt="Resetar" className="icone-lixeira" />
+                    <span>Resetar Grade</span>
+                </button>
             </header>
 
             <div className="container-periodos">
@@ -116,5 +137,5 @@ export default function App() {
                 </a>
             </footer>
         </div>
-    );
+    )
 }
