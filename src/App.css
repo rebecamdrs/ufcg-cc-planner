@@ -11,6 +11,10 @@
   --accent-cc: #2563eb; 
   --accent-cc-hover: #00227e;
   --accent-cc-bg: rgba(37, 99, 235, 0.08);
+
+  --accent-amber: #f59e0b;
+  --accent-amber-bg: #fffbeb;
+  --accent-amber-glow: rgba(245, 158, 11, 0.25);
   
   --text-title: #0f172a;
   --text-body: #475569;
@@ -106,6 +110,7 @@ body {
   color: var(--text-muted);
   font-weight: 500;
 }
+
 .coluna-periodo {
   min-height: 150vh;
   background-color: var(--bg-column);
@@ -153,30 +158,12 @@ body {
   transform: translateY(-2px);
 }
 
+/* Atualizado para usar as variáveis do :root */
 .card-cadeira.card-prerequisito {
-  border-color: #f59e0b !important; /* Amber / Laranja para destaque de pré-requisito */
-  background-color: #fffbeb !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 8px 16px rgba(245, 158, 11, 0.12) !important;
+  border-color: var(--accent-amber) !important;
+  background-color: var(--accent-amber-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-amber-glow), 0 8px 16px rgba(245, 158, 11, 0.12) !important;
   transform: translateY(-2px);
-}
-
-.card-cadeira.concluida {
-  background-color: var(--bg-success-light);
-  border-color: #a7f3d0;
-}
-
-.card-cadeira.concluida .titulo-cadeira {
-  color: var(--success-green);
-  text-decoration: line-through;
-}
-
-.card-cadeira.concluida .card-tag-numero {
-  color: var(--success-green);
-}
-
-.card-cadeira.concluida .card-icon-box {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: var(--success-green);
 }
 
 .rodape-autores {
