@@ -21,7 +21,7 @@ export function ColunaPeriodo({
 
       <div className="header-periodo-top">
         <h2 className="titulo-periodo">{numeroPeriodo}° Período</h2>
-        <span className="contagem-disciplinas">{totalCadeiras} cadeiras</span>
+        <span className="contagem-disciplinas">{totalCadeiras} cad</span>
       </div>
 
       <div

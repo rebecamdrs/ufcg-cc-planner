@@ -127,9 +127,7 @@ body {
 }
 
 .coluna-periodo-wrapper {
-  width: 280px;
-  min-width: 280px;
-  max-width: 280px;
+  width: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -168,7 +166,7 @@ body {
 .coluna-periodo {
   width: 100%;
   box-sizing: border-box;
-  min-height: 80vh;
+  min-height: 100vh;
   background-color: var(--bg-column);
   border: 2px dashed var(--border-dashed);
   border-radius: 20px;
@@ -260,12 +258,10 @@ body {
 }
 
 .zona-novo-periodo {
-  width: 280px;
-  min-width: 280px;
-  max-width: 280px;
+  width: 200px;
   flex-shrink: 0;
   box-sizing: border-box;
-  min-height: 80vh;
+  min-height: 100vh;
   border: 2px dashed var(--border-card);
   border-radius: 20px;
   display: flex;
