@@ -45,6 +45,18 @@ export function CardCadeira({ cadeira, cadeiraSelecionada, setCadeiraSelecionada
                 e.dataTransfer.setData("text/plain", cadeira.nome); // salva nome da cadeira
             }}
         >
+            {excesso && (
+                <span
+                    title="Limite de 6 cadeiras por período excedido"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        alert(`Aviso: ultrapassa limite de 6 cadeiras por período.`);
+                    }}
+                    style={styles.bolinhaAlerta}
+                >
+                    !
+                </span>
+            )}
             <strong className="titulo-cadeira">{cadeira.nome}</strong>
         </div>
     )

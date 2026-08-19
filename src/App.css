@@ -200,3 +200,26 @@ body {
 .rodape-autores a:hover {
   text-decoration: underline;
 }
+
+.zona-novo-periodo {
+  min-width: 240px;
+  min-height: 80vh;
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.zona-novo-periodo:hover {
+  border-color: #0969da;
+  color: #0969da;
+  background-color: rgba(9, 105, 218, 0.04);
+}
