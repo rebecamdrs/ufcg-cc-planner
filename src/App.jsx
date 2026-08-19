@@ -97,7 +97,10 @@ export default function App() {
                             }
                         }}
                     >
-                        <span>+ Novo período</span>
+                        <div className="conteudo-zona-novo">
+                            <strong>+ Novo período</strong>
+                            <p className="subtexto-zona">Arraste uma cadeira para criar.</p>
+                        </div>
                     </div>
                 )}
             </div>

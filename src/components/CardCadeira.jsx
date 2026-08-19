@@ -48,50 +48,18 @@ export function CardCadeira({ cadeira, cadeiraSelecionada, setCadeiraSelecionada
         >
             {excesso && (
                 <span
+                    className="bolinha-alerta"
                     title="Limite de 6 cadeiras por período excedido"
                     onClick={(e) => {
                         e.stopPropagation();
                         alert(`Aviso: ultrapassa limite de 6 cadeiras por período.`);
                     }}
-                    style={styles.bolinhaAlerta}
                 >
                     !
                 </span>
             )}
 
             <strong className="titulo-cadeira">{cadeira.nome}</strong>
-
-            <span style={styles.detalhes}>
-                {cadeira.creditos} cr | {cadeira.carga_horaria}h
-            </span>
         </div>
     );
 }
-
-const styles = {
-    detalhes: {
-        fontSize: '0.75rem',
-        color: '#666',
-        marginTop: '0.2rem',
-        display: 'block'
-    },
-    bolinhaAlerta: {
-        position: 'absolute',
-        top: '-6px',
-        right: '-6px',
-        width: '20px',
-        height: '20px',
-        backgroundColor: '#e53935',
-        color: '#ffffff',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '0.75rem',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
-        userSelect: 'none',
-        zIndex: 10
-    }
-};
