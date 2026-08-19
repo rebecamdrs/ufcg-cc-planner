@@ -1,47 +1,51 @@
 import { CardCadeira } from "./CardCadeira";
 
-export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira, onMoverCadeira }) {
-  return (
-    <div className="coluna-periodo"
-      onDragOver={(e) => e.preventDefault()} //quando arrastado sobre, permite o drop (previne padrao)
-      onDrop={(e) => {
-        e.preventDefault(); //quando dropado, mesma coisa
-        const nomeCadeira = e.dataTransfer.getData("text/plain"); //salva nome da cadeira
-        if (onMoverCadeira && nomeCadeira) { //se func existir e nome da cadeira existir, move para o periodo
-          onMoverCadeira(nomeCadeira, numeroPeriodo); 
-        }
-      }}
-    >
-      <h3 style={styles.titulo}>{numeroPeriodo}º Período</h3>
+export function ColunaPeriodo({ 
+  numeroPeriodo, 
+  nomesCadeiras = [], 
+  buscarCadeira, 
+  onMoverCadeira, 
+  cadeiraSelecionada, 
+  setCadeiraSelecionada 
+}) {
 
-      <div style={styles.lista} onDragOver={(e) => e.preventDefault()} // permite o drop na lista
-        > 
-        {nomesCadeiras.map((nome,index) => {
-         const cadeira = buscarCadeira(nome); // localiza cadeira
-         return (
-       <CardCadeira 
-       key={nome} 
-       cadeira={cadeira} 
-       excesso={index >= 6} 
-    />
-  );
-})}
+  // Busca todas as cadeiras da coluna para renderização e cálculos
+  const cadeirasColuna = nomesCadeiras
+    .map((nome) => buscarCadeira(nome))
+    .filter(Boolean);
+
+  const totalCadeiras = nomesCadeiras.length;
+
+  return (
+    <div className="coluna-periodo-wrapper">
+
+      <div className="header-periodo-top">
+        <h2 className="titulo-periodo">{numeroPeriodo}° Período</h2>
+        <span className="contagem-disciplinas">{totalCadeiras} cadeiras</span>
       </div>
+
+      <div
+        className="coluna-periodo"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const nomeCadeira = e.dataTransfer.getData("text/plain");
+          if (onMoverCadeira && nomeCadeira) {
+            onMoverCadeira(nomeCadeira, numeroPeriodo);
+          }
+        }}
+      >
+        {cadeirasColuna.map((cadeira, index) => (
+          <CardCadeira
+            key={cadeira.nome || index}
+            cadeira={cadeira}
+            excesso={index >= 6}
+            cadeiraSelecionada={cadeiraSelecionada}
+            setCadeiraSelecionada={setCadeiraSelecionada}
+          />
+        ))}
+      </div>
+
     </div>
   );
 }
-
-const styles = {
-    titulo: {
-        fontSize: '1.1rem',
-        marginBottom: '0.8rem',
-        borderBottom: '2px solid #ddd',
-        paddingBottom: '0.4rem'
-    },
-    lista: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.8rem',
-        flexGrow: 1
-    }
-};
