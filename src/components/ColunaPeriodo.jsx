@@ -1,6 +1,6 @@
 import { CardCadeira } from "./CardCadeira";
 
-export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira, onMoverCadeira }) {
+export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira, onMoverCadeira, cadeiraSelecionada, setCadeiraSelecionada }) {
 
   // Busca todas as cadeiras da coluna para calcular os créditos
   const cadeirasColuna = nomesCadeiras
@@ -24,15 +24,20 @@ export function ColunaPeriodo({ numeroPeriodo, nomesCadeiras = [], buscarCadeira
           e.preventDefault(); //quando dropado, mesma coisa
           const nomeCadeira = e.dataTransfer.getData("text/plain"); //salva nome da cadeira
           if (onMoverCadeira && nomeCadeira) { //se func existir e nome da cadeira existir, move para o periodo
-            onMoverCadeira(nomeCadeira, numeroPeriodo);
+            onMoverCadeira(nomeCadeira, numeroPeriodo)
           }
         }}
       >
         {cadeirasColuna.map((cadeira) => (
-          <CardCadeira key={cadeira.nome || cadeira.id} cadeira={cadeira} />
+          <CardCadeira
+            key={cadeira.nome || cadeira.id}
+            cadeira={cadeira}
+            cadeiraSelecionada={cadeiraSelecionada}
+            setCadeiraSelecionada={setCadeiraSelecionada}
+          />
         ))}
       </div>
-      
+
     </div>
-  );
+  )
 }

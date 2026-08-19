@@ -3,74 +3,80 @@ import { MAPA_PERIODOS } from "./constants/mapa_periodos";
 import { ColunaPeriodo } from "./components/ColunaPeriodo";
 import "./App.css";
 
-export function App() {
-  const [cadeiras, setCadeiras] = useState([]);
-  const [grade, setGrade] = useState(MAPA_PERIODOS);
+export default function App() {
+    const [cadeiras, setCadeiras] = useState([]);
+    const [grade, setGrade] = useState(MAPA_PERIODOS);
 
-  // Busca as cadeiras do json do git
-  useEffect(() => {
-    fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
-      .then(resposta => resposta.json())
-      .then(dados => setCadeiras(dados))
-      .catch(erro => console.error("Erro ao carregar dados:", erro));
-  }, []);
+    // guarda a cadeira que o mouse ta em cima
+    const [cadeiraSelecionada, setCadeiraSelecionada] = useState(null);
 
-  // busca cadeira a partir do nome
-  function buscarCadeira(nome) {
-    const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
-    return cadeiras.find(c => c.nome === nome) || padrao;
-  }
+    // Busca as cadeiras do json do git
+    useEffect(() => {
+        fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
+            .then(resposta => resposta.json())
+            .then(dados => setCadeiras(dados))
+            .catch(erro => console.error("Erro ao carregar dados:", erro));
+    }, []);
 
-  // move cadeira para novo periodo
-  function moverCadeira(nomeCadeira, novoPeriodo) {
-    const periodoDestino = Number(novoPeriodo); //transforma periodo destino em numero
+    // busca cadeira a partir do nome
+    function buscarCadeira(nome) {
+        const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
+        return cadeiras.find(c => c.nome === nome) || padrao;
+    }
 
-    setGrade((gradeAtual) => {
-      const novaGrade = {};
-      // percorre cada periodo dentro da grade atual
-      for (const p in gradeAtual) {
-        //pega periodo, acessa lista de materias, cria nova lista filtrando a cadeira que foi movida
-        novaGrade[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
-      }
-      //insere a materia nova no periodo
-      if (novaGrade[periodoDestino]) {
-        novaGrade[periodoDestino] = [...novaGrade[periodoDestino], nomeCadeira];
-      }
+    // move cadeira para novo periodo
+    function moverCadeira(nomeCadeira, novoPeriodo) {
+        const periodoDestino = Number(novoPeriodo); //transforma periodo destino em numero
 
-      return novaGrade;
-    });
-  }
+        setGrade((gradeAtual) => {
+            const novaGrade = {};
+            // percorre cada periodo dentro da grade atual
+            for (const p in gradeAtual) {
+                //pega periodo, acessa lista de materias, cria nova lista filtrando a cadeira que foi movida
+                novaGrade[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
+            }
+            //insere a materia nova no periodo
+            if (novaGrade[periodoDestino]) {
+                novaGrade[periodoDestino] = [...novaGrade[periodoDestino], nomeCadeira];
+            }
 
-  return (
-    <div className="container-principal">
-      <header className="header-app">
-        <div>
-          <span className="tag-header">Matriz Curricular</span>
-          <h1 className="titulo-principal">Planner CC</h1>
+            return novaGrade;
+        });
+    }
+
+    return (
+        <div className="container-principal">
+            <header className="header-app">
+                <div>
+                    <span className="tag-header">Matriz Curricular</span>
+                    <h1 className="titulo-principal">Planner CC</h1>
+                </div>
+            </header>
+
+            <div className="container-periodos">
+                {Object.entries(grade).map(([periodo, nomesCadeiras]) => (
+                    <ColunaPeriodo
+                        key={periodo}
+                        numeroPeriodo={Number(periodo)}
+                        nomesCadeiras={nomesCadeiras}
+                        buscarCadeira={buscarCadeira}
+                        onMoverCadeira={moverCadeira}
+                        cadeiraSelecionada={cadeiraSelecionada}
+                        setCadeiraSelecionada={setCadeiraSelecionada}
+                    />
+                ))}
+            </div>
+
+            <footer className="rodape-autores">
+                Criado por:{' '}
+                <a href="https://github.com/rebecamdrs" target="_blank" rel="noopener noreferrer">
+                    Rebeca Medeiros
+                </a>{' '}
+                e{' '}
+                <a href="https://github.com/roanmotta" target="_blank" rel="noopener noreferrer">
+                    Roan Motta
+                </a>
+            </footer>
         </div>
-      </header>
-
-      <div className="container-periodos">
-        {Object.entries(grade).map(([periodo, nomesCadeiras]) => (
-          <ColunaPeriodo
-            key={periodo}
-            numeroPeriodo={Number(periodo)}
-            nomesCadeiras={nomesCadeiras}
-            buscarCadeira={buscarCadeira}
-            onMoverCadeira={moverCadeira}
-          />
-        ))}
-      </div>
-      <footer className="rodape-autores">
-        Criado por:{' '}
-        <a href="https://github.com/rebecamdrs" target="_blank" rel="noopener noreferrer">
-          Rebeca Medeiros
-        </a>{' '}
-        e{' '}
-        <a href="https://github.com/roanmotta" target="_blank" rel="noopener noreferrer">
-          Roan Motta
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
