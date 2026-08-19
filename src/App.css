@@ -49,7 +49,7 @@ body {
 
 .titulo-principal {
   font-family: var(--font-title);
-  font-size: 2.75rem;
+  font-size: 4rem;
   font-weight: 800;
   color: var(--text-title);
   margin: 0;
@@ -59,13 +59,52 @@ body {
 
 .tag-header {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
   font-weight: 700;
   color: var(--accent-cc);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   display: block;
   margin-bottom: 0.4rem;
+}
+
+.botao-reset {
+  background-color: var(--accent-cc);
+  border-radius: 18px;
+  padding: 0.75rem 1.25rem;
+  user-select: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(33, 39, 53, 0);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--bg-page);
+
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.botao-reset .icone-lixeira {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.botao-reset:hover {
+  background-color: var(--alert-red);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.25);
+}
+
+.botao-reset:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(229, 57, 53, 0.15);
 }
 
 .container-periodos {
