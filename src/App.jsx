@@ -3,6 +3,7 @@ import { MAPA_PERIODOS } from "./constants/mapa_periodos"
 import { ColunaPeriodo } from "./components/ColunaPeriodo"
 import "./App.css"
 import iconeLixeira from "./assets/icone-lixeira.svg"
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function App() {
     const [cadeiras, setCadeiras] = useState([])
@@ -27,6 +28,22 @@ export default function App() {
     // guarda a cadeira que o mouse ta em cima
     const [cadeiraSelecionada, setCadeiraSelecionada] = useState(null)
 
+    const dispararToastErro = (mensagem) => {
+        toast.custom((t) => (
+            <div className={`toast-custom-card ${t.visible ? 'toast-entrar' : 'toast-sair'}`}>
+                <div className="toast-icone-wrapper">
+                    <svg className="toast-svg" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                </div>
+                <div className="toast-conteudo">
+                    <span className="toast-titulo">ATENÇÃO</span>
+                    <span className="toast-mensagem">{mensagem}</span>
+                </div>
+            </div>
+        ), { id: 'erro-movimentacao', duration: 4000 });
+    }
+
     // Busca as cadeiras do json do git
     useEffect(() => {
         fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
@@ -41,11 +58,48 @@ export default function App() {
         return cadeiras.find(c => c.nome === nome) || padrao
     }
 
+
     // move cadeira para novo periodo
     function moverCadeira(nomeCadeira, novoPeriodo) {
         const periodoDestino = Number(novoPeriodo);
+        const preRequisitos = buscarCadeira(nomeCadeira).prerequisitos || []
 
         setGrade((gradeAtual) => {
+            // valida os pre requisistos
+            for (const requisitos of preRequisitos) {
+                const objReq = cadeiras.find((c) => c.codigo === requisitos || c.nome === requisitos)
+                const nomeReq = objReq ? objReq.nome : requisitos
+
+                // encontra o periodo do pre requisito
+                const periodoReq = Object.keys(gradeAtual).find((p) => gradeAtual[p].includes(nomeReq))
+
+                // se o periodo ta no mesmo periodo ou em um anterior ao destino
+                if (periodoReq !== undefined && Number(periodoReq) >= periodoDestino) {
+                    dispararToastErro('Essa cadeira não pode ser movida para antes dos seus pré-requisitos.')
+                    return gradeAtual
+                }
+            }
+
+            // valida os pos requisitos (bloqueadas)
+            for (const p in gradeAtual) {
+                const numPeriodo = Number(p)
+
+                for (const cadeira of gradeAtual[p]) {
+                    if (cadeira === nomeCadeira) continue
+
+                    const reqsDaCadeira = buscarCadeira(cadeira).prerequisitos || []
+                    const objCadeiraSendoMovida = buscarCadeira(nomeCadeira)
+
+                    // verifica se a cadeira atual exige a cadeira sendo movida 
+                    const ehDependente = reqsDaCadeira.includes(nomeCadeira) || (objCadeiraSendoMovida.codigo && reqsDaCadeira.includes(objCadeiraSendoMovida.codigo))
+
+                    if (ehDependente && numPeriodo <= periodoDestino) {
+                        dispararToastErro('Essa cadeira não pode ser movida para para depois das cadeiras que dependem dela.')
+                        return gradeAtual
+                    }
+                }
+            }
+
             const rascunho = {};
             for (const p in gradeAtual) {
                 rascunho[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
@@ -80,6 +134,8 @@ export default function App() {
 
     return (
         <div className="container-principal">
+            <Toaster position="top-right" reverseOrder={false} />
+
             <header className="header-app">
                 <div>
                     <span className="tag-header">Matriz Curricular</span>
