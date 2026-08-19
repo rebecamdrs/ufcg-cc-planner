@@ -1,38 +1,52 @@
 export function CardCadeira({ cadeira, cadeiraSelecionada, setCadeiraSelecionada, excesso }) {
-    if (!cadeira) return null;
+    if (!cadeira) return null
 
     // remove acentos, letras maiúsculas e espaços das pontas
     function normalizar(texto) {
-        if (!texto) return "";
-        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        if (!texto) return ""
+        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
     }
 
-    const nomeAtual = normalizar(cadeira.nome);
-    const nomeSelecionada = normalizar(cadeiraSelecionada?.nome);
+    const nomeAtual = normalizar(cadeira.nome)
+    const nomeSelecionada = normalizar(cadeiraSelecionada?.nome)
 
     // verifica se esse card é o que está selecionado (com mouse em cima)
-    const isSelecionado = nomeSelecionada && nomeAtual === nomeSelecionada;
+    const isSelecionado = nomeSelecionada && nomeAtual === nomeSelecionada
 
     // puxa os pre-requisitos da cadeira selecionada
-    const listaRequisitos = cadeiraSelecionada?.prerequisitos || [];
+    const listaRequisitos = cadeiraSelecionada?.prerequisitos || []
 
     // verifica se este card é pre-requisito da cadeira selecionada
     function isPreRequisito() {
-        if (!listaRequisitos || listaRequisitos.length === 0) return false;
+        if (!listaRequisitos || listaRequisitos.length === 0) return false
 
         for (const requisito of listaRequisitos) {
-            const requisitoLimpo = normalizar(requisito);
-            if (requisitoLimpo === nomeAtual) return true;
+            if (normalizar(requisito) === nomeAtual) return true
         }
         return false;
     }
 
+    function isBloqueada() {
+        if (!nomeSelecionada || isSelecionado) return false
+
+        const requisitosAtual = cadeira.prerequisitos || []
+        for (const requisito of requisitosAtual) {
+            if (normalizar(requisito) === nomeSelecionada) return true
+        }
+        return false
+    }
+
     // classe condicional
-    let statusClass = "";
+    let statusClass = ""
+    let aviso = ""
     if (isSelecionado) {
-        statusClass = "card-ativo";
+        statusClass = "card-ativo"
     } else if (isPreRequisito()) {
-        statusClass = "card-prerequisito";
+        statusClass = "card-prerequisito"
+        aviso = "Pré-requisito"
+    } else if (isBloqueada()) {
+        statusClass = "card-bloqueado"
+        aviso = "Libera"
     }
 
     return (
@@ -59,7 +73,14 @@ export function CardCadeira({ cadeira, cadeiraSelecionada, setCadeiraSelecionada
                 </span>
             )}
 
+            {aviso && (
+                <span className="aviso-status">
+                    {aviso}
+                </span>
+            )}
+
             <strong className="titulo-cadeira">{cadeira.nome}</strong>
+
         </div>
     );
 }

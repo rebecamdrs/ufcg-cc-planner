@@ -6,7 +6,7 @@ export function ColunaPeriodo({
   buscarCadeira, 
   onMoverCadeira, 
   cadeiraSelecionada, 
-  setCadeiraSelecionada 
+  setCadeiraSelecionada
 }) {
 
   // busca todas as cadeiras da coluna para renderização e calculos
