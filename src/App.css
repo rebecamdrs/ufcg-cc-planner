@@ -71,12 +71,18 @@ body {
   gap: 1.5rem;
   overflow-x: auto;
   align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 0.5rem; 
+  padding-right: 2.5rem;  
   padding-bottom: 5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .coluna-periodo-wrapper {
   min-width: 260px;
   max-width: 300px;
+  flex-shrink: 0; 
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
