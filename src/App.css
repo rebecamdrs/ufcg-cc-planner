@@ -5,6 +5,7 @@
 
   --bg-page: #f8f8f8;
   --bg-card: #ffffff;
+  --bg-column: #eff0f7;
   --border-card: #cbd5e1;
   --border-dashed: rgba(203, 213, 225, 0.8);
   
@@ -12,9 +13,9 @@
   --accent-cc-hover: #00227e;
   --accent-cc-bg: rgba(37, 99, 235, 0.08);
 
-  --accent-amber: #f59e0b;
-  --accent-amber-bg: #fffbeb;
-  --accent-amber-glow: rgba(245, 158, 11, 0.25);
+  --accent-yellow: #f59e0b;
+  --accent-yellow-bg: #fffbeb;
+  --accent-yellow-glow: rgba(245, 158, 11, 0.25);
   
   --text-title: #0f172a;
   --text-body: #475569;
@@ -68,7 +69,7 @@ body {
 .container-periodos {
   display: flex;
   flex-direction: row;
-  gap: 1.5rem;
+  gap: 1.2rem;
   overflow-x: auto;
   align-items: flex-start;
   justify-content: flex-start;
@@ -120,7 +121,6 @@ body {
 .coluna-periodo {
   min-height: 150vh;
   background-color: var(--bg-column);
-  backdrop-filter: blur(8px);
   border: 2px dashed var(--border-dashed);
   border-radius: 20px;
   padding: 1rem;
@@ -166,9 +166,9 @@ body {
 
 /* Atualizado para usar as variáveis do :root */
 .card-cadeira.card-prerequisito {
-  border-color: var(--accent-amber) !important;
-  background-color: var(--accent-amber-bg) !important;
-  box-shadow: 0 0 0 3px var(--accent-amber-glow), 0 8px 16px rgba(245, 158, 11, 0.12) !important;
+  border-color: var(--accent-yellow) !important;
+  background-color: var(--accent-yellow-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-yellow-glow), 0 8px 16px rgba(245, 158, 11, 0.12) !important;
   transform: translateY(-2px);
 }
 
