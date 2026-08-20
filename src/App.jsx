@@ -82,7 +82,6 @@ export default function App() {
         })
     }
 
-
     /** RESTAURAR MANTENDO OPTATIVAS E PAGAS */
     function resetarMantendoOptativas() {
         if (!confirm('Deseja restaurar a matriz mantendo suas optativas e cadeiras pagas?')) return
@@ -92,7 +91,7 @@ export default function App() {
             const cadeirasJaAdicionadas = new Set()
             const cadeirasPagasSet = new Set(cadeirasPagas)
 
-            // Mapeia em qual período cada cadeira PAGA se encontra atualmente
+            // mapeia em qual período cada cadeira paga ta atualmente
             const mapaPeriodosPagas = {}
             Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
                 const listaCadeiras = cadeiras || []
@@ -103,15 +102,16 @@ export default function App() {
                 })
             })
 
-            // Mapeia optativas customizadas por PERÍODO específico (para não ir para o 1º slot disponível)
-            const optativasPorPeriodo = {}
+            // mapeia optativas selecionadas apenas para o periodo onde foram colocadas
+            const optativasCustomPorPeriodo = {}
             Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
-                optativasPorPeriodo[periodo] = []
+                optativasCustomPorPeriodo[periodo] = []
                 const listaCadeiras = cadeiras || []
                 listaCadeiras.forEach((c) => {
                     const ehPadrao = Object.values(MAPA_PERIODOS).flat().includes(c)
+                    // se nn for cadeira padrao da matriz (optativa escolhida pelo usuário) e não estiver paga
                     if (!ehPadrao && !cadeirasPagasSet.has(c)) {
-                        optativasPorPeriodo[periodo].push(c)
+                        optativasCustomPorPeriodo[periodo].push(c)
                     }
                 })
             })
@@ -120,7 +120,7 @@ export default function App() {
             function adicionarCadeira(periodo, cadeira) {
                 if (!cadeira || cadeirasJaAdicionadas.has(cadeira)) return
 
-                // se for um periodo extra, cria o array apenas ao adicionar a cadeira
+                // se for um periodo extra cria o array apenas ao adicionar a cadeira
                 if (!novaGrade[periodo]) {
                     novaGrade[periodo] = []
                 }
@@ -132,11 +132,11 @@ export default function App() {
             // refaz os periodos da matriz padrao
             Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
                 novaGrade[periodo] = []
-                const optativasDoPeriodo = optativasPorPeriodo[periodo] || []
+                const optativasDoPeriodo = optativasCustomPorPeriodo[periodo] || []
                 let idxOptativaLocal = 0
 
                 cadeirasPadrao.forEach((cadeiraPadrao) => {
-                    // se a cadeira padrao estiver paga e foi movida para outro periodo, libera o slot original
+                    // se a cadeira padrao estiver paga e foi movida para outro periodo libera o slot original
                     const periodoOndeEstaPaga = mapaPeriodosPagas[cadeiraPadrao]
                     if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) {
                         return
