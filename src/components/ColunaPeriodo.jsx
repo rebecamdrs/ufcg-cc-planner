@@ -1,14 +1,16 @@
 import { CardCadeira } from "./CardCadeira";
 
-export function ColunaPeriodo({ 
-  numeroPeriodo, 
-  nomesCadeiras = [], 
-  buscarCadeira, 
-  onMoverCadeira, 
-  cadeiraSelecionada, 
+export function ColunaPeriodo({
+  numeroPeriodo,
+  nomesCadeiras = [],
+  buscarCadeira,
+  onMoverCadeira,
+  cadeiraSelecionada,
   setCadeiraSelecionada,
   listaOptativas,
-  onTrocarOptativa
+  onTrocarOptativa,
+  cadeirasPagas,
+  pagarCadeira
 }) {
 
   const cadeirasColuna = nomesCadeiras
@@ -44,9 +46,11 @@ export function ColunaPeriodo({
             cadeiraSelecionada={cadeiraSelecionada}
             setCadeiraSelecionada={setCadeiraSelecionada}
             listaOptativas={listaOptativas}
-            onSelecionarOptativa={(nomeEscolhido) => 
+            onSelecionarOptativa={(nomeEscolhido) =>
               onTrocarOptativa(numeroPeriodo, index, nomeEscolhido, cadeira.nome)
             }
+            cadeirasPagas={cadeirasPagas}
+            pagarCadeira={pagarCadeira}
           />
         ))}
       </div>

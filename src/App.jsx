@@ -54,19 +54,48 @@ export default function App() {
 
     // busca cadeira a partir do nome
     function buscarCadeira(nome) {
-    if (!nome) return null;
+        if (!nome) return null;
 
-    if (nome.startsWith("Atividades Complementares")) {
-        return { nome: nome, creditos: 0, carga_horaria: 120 };
-    }
-    if (nome.startsWith("Optativa")) {
-        return { nome: nome, creditos: 4, carga_horaria: 60 };
+        if (nome.startsWith("Atividades Complementares")) {
+            return { nome: nome, creditos: 0, carga_horaria: 120 };
+        }
+        if (nome.startsWith("Optativa")) {
+            return { nome: nome, creditos: 4, carga_horaria: 60 };
+        }
+
+        const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
+        return cadeiras.find((c) => c.nome === nome) || padrao;
     }
 
-    const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
-    return cadeiras.find((c) => c.nome === nome) || padrao;
-}
-    
+    const [cadeirasPagas, setCadeirasPagas] = useState([])
+
+    // atualiza a lista de cadeiras pagas
+    function pagarCadeira(nomeCadeira) {
+        setCadeirasPagas((listaAnterior) => {
+            // se a cadeira ja esta na lista, remove (desmarca)
+            if (cadeirasPagas.includes(nomeCadeira)) {
+                return listaAnterior.filter((nome) => nome !== nomeCadeira)
+            }
+            // se nao estiver, adiciona no final da lista (marca)
+            return [...listaAnterior, nomeCadeira]
+        })
+    }
+
+    /* verofica se uma cadeira está liberada para pagar */
+    function isLiberada(cadeira, cadeirasPagas) {
+        const requisitos = cadeira.prerequisitos || []
+        // se  não tem pré-requisitos, está liberada
+        if (requisitos.length === 0) return true
+
+        // fica liberada se todos os requisitos estiverem na lista de pagas
+        for (const requisito of requisitos) {
+            if (!cadeirasPagas.includes(requisito)) {
+                return false
+            }
+        }
+        return true
+    }
+
     const listaOptativasDisponiveis = useMemo(() => {
         const nomesObrigatorias = new Set(
             Object.values(MAPA_PERIODOS)
@@ -186,6 +215,8 @@ export default function App() {
                         setCadeiraSelecionada={setCadeiraSelecionada}
                         listaOptativas={listaOptativasDisponiveis}
                         onTrocarOptativa={handleTrocarOptativa}
+                        cadeirasPagas={cadeirasPagas}
+                        pagarCadeira={pagarCadeira}
                     />
                 ))}
 
