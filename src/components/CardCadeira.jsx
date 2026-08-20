@@ -72,23 +72,23 @@ export function CardCadeira({
 
   return (
     <div
-      ref={dropdownRef}
-      className={`card-cadeira ${statusClass} ${ehOptativa ? "card-optativa-slot" : ""}`}
-      style={{ 
-        position: 'relative',
-        cursor: ehOptativa ? 'pointer' : 'grab',
-        zIndex: menuAberto ? 50 : 1
-      }}
-      draggable={!ehOptativa}
-      onClick={() => {
-        if (ehOptativa) setMenuAberto((prev) => !prev);
-      }}
-      onMouseEnter={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(cadeira)}
-      onMouseLeave={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(null)}
-      onDragStart={(e) => {
-        e.dataTransfer.setData("text/plain", cadeira.nome);
-      }}
-    >
+  ref={dropdownRef}
+  className={`card-cadeira ${statusClass} ${ehOptativa ? "card-optativa-slot" : ""}`}
+  style={{ 
+    position: 'relative',
+    cursor: 'grab', // permite o cursor de arrastar
+    zIndex: menuAberto ? 50 : 1
+  }}
+  draggable={!menuAberto} // só desativa o arrasto se a listinha estiver aberta
+  onClick={() => {
+    if (ehOptativa) setMenuAberto((prev) => !prev);
+  }}
+  onMouseEnter={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(cadeira)}
+  onMouseLeave={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(null)}
+  onDragStart={(e) => {
+    e.dataTransfer.setData("text/plain", cadeira.nome);
+  }}
+>
       {excesso && (
         <span
           className="bolinha-alerta"
