@@ -1,22 +1,26 @@
 import { useState, useRef, useEffect } from "react";
 import { DropdownOptativas } from "./DropdownOptativas";
 
-export function CardCadeira({ 
-  cadeira, 
-  cadeiraSelecionada, 
-  setCadeiraSelecionada, 
-  excesso, 
-  listaOptativas = [], 
-  onSelecionarOptativa 
+export function CardCadeira({
+  cadeira,
+  cadeiraSelecionada,
+  setCadeiraSelecionada,
+  excesso,
+  listaOptativas = [],
+  onSelecionarOptativa,
+  cadeirasPagas,
+  pagarCadeira
 }) {
   if (!cadeira) return null;
+
+  const foiPaga = cadeirasPagas.includes(cadeira.nome)
 
   const [menuAberto, setMenuAberto] = useState(false);
   const dropdownRef = useRef(null);
 
   // Identifica se é um slot de optativa ou uma matéria optativa já selecionada
-  const ehOptativa = 
-    cadeira.nome.startsWith("Optativa") || 
+  const ehOptativa =
+    cadeira.nome.startsWith("Optativa") ||
     listaOptativas.some((item) => item.nome === cadeira.nome);
 
   useEffect(() => {
@@ -72,23 +76,28 @@ export function CardCadeira({
 
   return (
     <div
-  ref={dropdownRef}
-  className={`card-cadeira ${statusClass} ${ehOptativa ? "card-optativa-slot" : ""}`}
-  style={{ 
-    position: 'relative',
-    cursor: 'grab', // permite o cursor de arrastar
-    zIndex: menuAberto ? 50 : 1
-  }}
-  draggable={!menuAberto} // só desativa o arrasto se a listinha estiver aberta
-  onClick={() => {
-    if (ehOptativa) setMenuAberto((prev) => !prev);
-  }}
-  onMouseEnter={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(cadeira)}
-  onMouseLeave={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(null)}
-  onDragStart={(e) => {
-    e.dataTransfer.setData("text/plain", cadeira.nome);
-  }}
->
+      ref={dropdownRef}
+      className={`card-cadeira ${statusClass} ${ehOptativa ? "card-optativa-slot" : ""} ${foiPaga ? 'card-paga' : ''}`}
+      style={{
+        position: 'relative',
+        cursor: 'grab', // permite o cursor de arrastar
+        zIndex: menuAberto ? 50 : 1
+      }}
+      draggable={!menuAberto && !foiPaga} // só desativa o arrasto se a listinha estiver aberta
+      onClick={() => {
+        // se for uma optativa sem cadeira escolhida abre o dropdown
+        if (cadeira.nome.startsWith("Optativa")) {
+          setMenuAberto((prev) => !prev);
+        } else {
+          pagarCadeira(cadeira);
+        }
+      }}
+      onMouseEnter={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(cadeira)}
+      onMouseLeave={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(null)}
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", cadeira.nome);
+      }}
+    >
       {excesso && (
         <span
           className="bolinha-alerta"
@@ -104,21 +113,26 @@ export function CardCadeira({
 
       {aviso && <span className="aviso-status">{aviso}</span>}
 
+      {ehOptativa && !cadeira.nome.startsWith("Optativa") && (
+        <button
+          type="button"
+          className="btn-trocar-optativa"
+          title="Trocar disciplina optativa"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAberto((prev) => !prev);
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-ccw-icon lucide-refresh-ccw"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 16h5v5" /></svg>
+        </button>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
         <strong className="titulo-cadeira">{cadeira.nome}</strong>
-        {ehOptativa && (
-          <span
-            style={{
-              fontSize: "10px",
-              color: "#38bdf8",
-              fontWeight: "600",
-              letterSpacing: "0.5px",
-              textTransform: "uppercase"
-            }}
-          >
-            Optativa
-          </span>
-        )}
+        <span className="badge-subtexto-card">
+          {ehOptativa ? "optativa" : "obrigatória"}
+        </span>
+
       </div>
 
       {ehOptativa && menuAberto && (
