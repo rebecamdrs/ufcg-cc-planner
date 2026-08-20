@@ -1,15 +1,15 @@
 import { useState } from "react"
 import { Toaster } from 'react-hot-toast'
 
-import { Header } from "./components/Header"
-import { ColunaPeriodo } from "./components/ColunaPeriodo"
-import { NovoPeriodo } from "./components/NovoPeriodo"
-import { Footer } from "./components/Footer"
+import { Header } from "./components/Header/Header"
+import { ColunaPeriodo } from "./components/ColunaPeriodo/ColunaPeriodo"
+import { NovoPeriodo } from "./components/NovoPeriodo/NovoPeriodo"
+import { Footer } from "./components/Footer/Footer"
 
-import { useCadeiras } from "./hooks/useCadeiras"
-import { useCadeirasPagas } from "./hooks/useCadeirasPagas"
-import { useGrade } from "./hooks/useGrade"
-import { useToasts } from "./hooks/useToasts"
+import { useCadeiras } from "./hooks/useCadeiras.js"
+import { useCadeirasPagas } from "./hooks/useCadeirasPagas.js"
+import { useGrade } from "./hooks/useGrade.js"
+import { useToasts } from "./hooks/useToasts.jsx"
 import "./App.css"
 
 export default function App() {

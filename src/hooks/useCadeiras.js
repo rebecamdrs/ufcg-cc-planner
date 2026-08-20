@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { MAPA_PERIODOS } from "../constants/mapa_periodos"
-import { sanitizarCadeiras } from "../utils/cadeirasHelpers"
+import { sanitizarCadeiras } from "../utils/sanitizarCadeiras.js"
 
 export function useCadeiras() {
     const [cadeiras, setCadeiras] = useState([])

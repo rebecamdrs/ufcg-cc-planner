@@ -20,7 +20,7 @@ const REQUISITOS_GARANTIDOS = {
 /** 
  * Normaliza nomes de cadeiras e pré-requisitos 
  * */
-function sanitizarCadeiras(dadosBrutos) {
+export function sanitizarCadeiras(dadosBrutos) {
     if (!Array.isArray(dadosBrutos)) return []
 
     return dadosBrutos.map((disc) => {
@@ -53,7 +53,7 @@ function sanitizarCadeiras(dadosBrutos) {
 /** 
  * Verifica se uma cadeira está liberada para pagar
  */
-function isLiberada(cadeira, pagas) {
+export function isLiberada(cadeira, pagas) {
     const requisitos = cadeira.prerequisitos || []
     if (requisitos.length === 0) return true
 

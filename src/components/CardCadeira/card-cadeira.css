@@ -1,0 +1,190 @@
+.card-cadeira {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 18px;
+  padding: 1.3rem;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(33, 39, 53, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.card-cadeira:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
+  border-color: var(--accent-cc);
+}
+
+.titulo-cadeira {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-title);
+  line-height: 1.3;
+  margin: 0;
+  user-select: none;
+}
+
+/* --- ESTADOS DO CARD --- */
+
+.card-cadeira.card-ativo {
+  border-color: var(--accent-cc) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25), 0 8px 20px rgba(37, 99, 235, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+.card-cadeira.card-prerequisito {
+  border-color: var(--accent-yellow) !important;
+  background-color: var(--accent-yellow-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-yellow-glow), 0 8px 16px rgba(245, 158, 11, 0.12) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.card-cadeira.card-bloqueado {
+  border-color: var(--accent-purple) !important;
+  background-color: var(--accent-purple-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-purple-glow), 0 8px 16px rgba(139, 92, 246, 0.12) !important;
+  transition: all 0.2s ease-in-out;
+  cursor: not-allowed;
+}
+
+.card-cadeira.card-paga {
+  background-color: var(--bg-success-light) !important;
+  border-color: var(--success-green) !important;
+  cursor: pointer !important;
+}
+
+.card-cadeira.card-paga .titulo-cadeira {
+  color: #065f46 !important;
+}
+
+.card-cadeira.card-paga .badge-subtexto-card {
+  color: var(--success-green) !important;
+}
+
+.card-cadeira.card-paga:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(16, 185, 129, 0.18) !important;
+}
+
+/* --- SUBTEXTOS E BADGES --- */
+
+.badge-subtexto-card {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 2px;
+  transition: color 0.2s ease;
+}
+
+.card-cadeira.card-optativa-slot .badge-subtexto-card {
+  color: var(--accent-cc);
+}
+
+/* --- INDICADORES E AVISOS --- */
+
+.bolinha-alerta {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--alert-red);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(63, 14, 14, 0.25);
+  user-select: none;
+  z-index: 11;
+  font-family: var(--font-mono);
+  animation: popIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.aviso-status {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  height: 20px;
+  padding: 0 0.6rem;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  line-height: 1;
+  padding-bottom: 1px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  user-select: none;
+  z-index: 10;
+  animation: popIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  white-space: nowrap;
+}
+
+.card-cadeira.card-prerequisito .aviso-status {
+  background-color: var(--accent-yellow);
+  color: #ffffff;
+}
+
+.card-cadeira.card-bloqueado .aviso-status {
+  background-color: var(--accent-purple);
+  color: #ffffff;
+}
+
+.card-cadeira .bolinha-alerta~.aviso-status {
+  right: 20px;
+}
+
+/* --- BOTÃO DE TROCAR OPTATIVA --- */
+
+.btn-trocar-optativa {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent !important;
+  border: none !important;
+  outline: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 5;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-trocar-optativa:hover {
+  background: transparent !important;
+  color: var(--accent-cc);
+  transform: rotate(45deg);
+}
+
+.card-cadeira.card-paga .btn-trocar-optativa {
+  color: #065f46;
+  opacity: 0.7;
+}
+
+.card-cadeira.card-paga .btn-trocar-optativa:hover {
+  color: var(--success-green);
+  opacity: 1;
+}

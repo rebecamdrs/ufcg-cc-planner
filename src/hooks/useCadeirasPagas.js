@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { isLiberada } from "../utils/cadeirasHelpers"
+import { isLiberada } from "../utils/sanitizarCadeiras.js"
 
 export function useCadeirasPagas(cadeiras, onErroPreRequisito) {
     const [cadeirasPagas, setCadeirasPagas] = useState(() => {

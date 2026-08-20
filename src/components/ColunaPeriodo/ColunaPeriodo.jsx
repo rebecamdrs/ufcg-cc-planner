@@ -1,4 +1,5 @@
-import { CardCadeira } from "./CardCadeira";
+import { CardCadeira } from "../CardCadeira/CardCadeira";
+import "./coluna-periodo.css"
 
 export function ColunaPeriodo({
   numeroPeriodo,

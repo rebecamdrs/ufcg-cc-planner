@@ -1,3 +1,5 @@
+import "./header.css"
+
 export function Header({ onResetMantendoOptativas, onResetTotal }) {
     return (
         <header className="header-app">

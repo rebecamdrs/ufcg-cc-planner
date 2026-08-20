@@ -1,4 +1,6 @@
-export function ZonaNovoPeriodo({ grade, onMoverCadeira }) {
+import "./novo-periodo.css"
+
+export function NovoPeriodo({ grade, onMoverCadeira }) {
     if (Object.keys(grade).length >= 14) return null
 
     function handleDrop(e) {
