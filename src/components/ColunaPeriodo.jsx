@@ -6,10 +6,11 @@ export function ColunaPeriodo({
   buscarCadeira, 
   onMoverCadeira, 
   cadeiraSelecionada, 
-  setCadeiraSelecionada
+  setCadeiraSelecionada,
+  listaOptativas,
+  onTrocarOptativa
 }) {
 
-  // busca todas as cadeiras da coluna para renderização e calculos
   const cadeirasColuna = nomesCadeiras
     .map((nome) => buscarCadeira(nome))
     .filter(Boolean);
@@ -42,6 +43,10 @@ export function ColunaPeriodo({
             excesso={index >= 6}
             cadeiraSelecionada={cadeiraSelecionada}
             setCadeiraSelecionada={setCadeiraSelecionada}
+            listaOptativas={listaOptativas}
+            onSelecionarOptativa={(nomeEscolhido) => 
+              onTrocarOptativa(numeroPeriodo, index, nomeEscolhido, cadeira.nome)
+            }
           />
         ))}
       </div>

@@ -1,29 +1,69 @@
 export const MAPA_PERIODOS = {
     1: [
-        "Programação I", "Laboratório de Programação I", "Introdução à Computação", "Fundamentos de Matemática para Ciência da Computação I", "Direito e Cidadania"
+        "Direito e Cidadania",
+        "Fundamentos de Matemática para Ciência da Computação I",
+        "Introdução à Computação",
+        "Laboratório de Programação I",
+        "Programação I"
     ],
     2: [
-        "Programação II", "Laboratório de Programação II", "Fundamentos de Matemática para Ciência da Computação II", "Cálculo Diferencial e Integral I", "Economia"
+        "Cálculo Diferencial e Integral I",
+        "Economia",
+        "Fundamentos de Matemática para Ciência da Computação II",
+        "Laboratório de Programação II",
+        "Programação II"
     ],
     3: [
-        "Álgebra Linear I", "Estruturas de Dados e Algoritmos", "Laboratório de Estruturas de Dados e Algoritmos", "Lógica para Computação", "Cálculo Diferencial e Integral II"
+        "Álgebra Linear I",
+        "Cálculo Diferencial e Integral II",
+        "Estruturas de Dados e Algoritmos",
+        "Laboratório de Estruturas de Dados e Algoritmos",
+        "Lógica para Computação"
     ],
     4: [
-        "Banco de Dados I", "Introdução à Probabilidade", "Organização e Arquitetura de Computadores", "Teoria da Computação", "Paradigmas de Linguagens de Programação", "Teoria dos Grafos"
+        "Banco de Dados I",
+        "Introdução à Probabilidade",
+        "Organização e Arquitetura de Computadores",
+        "Paradigmas de Linguagens de Programação",
+        "Teoria da Computação",
+        "Teoria dos Grafos"
     ],
     5: [
-        "Engenharia de Software", "Estatística Aplicada", "Inteligência Artificial", "Projeto de Software", "Redes de Computadores", "Sistemas Operacionais"
+        "Engenharia de Software",
+        "Estatística Aplicada",
+        "Inteligência Artificial",
+        "Projeto de Software",
+        "Redes de Computadores",
+        "Sistemas Operacionais"
     ],
     6: [
-        "Análise de Sistemas", "Análise e Técnicas de Algoritmos", "Programação Concorrente"
+        "Análise de Sistemas",
+        "Análise e Técnicas de Algoritmos",
+        "Programação Concorrente",
+        "Optativa 1",
+        "Optativa 2"
     ],
     7: [
-        "Compiladores", "Metodologia Científica"
+        "Compiladores",
+        "Metodologia Científica",
+        "Optativa 3",
+        "Optativa 4",
+        "Optativa 5"
     ],
     8: [
-        "Língua Portuguesa", "Projeto em Computação I"
+        "Língua Portuguesa",
+        "Projeto em Computação I",
+        "Atividades Complementares de Extensão",
+        "Optativa 6",
+        "Optativa 7",
+        "Optativa 8"
     ],
     9: [
-        "Projeto em Computação II", "Trabalho de Conclusão de Curso"
+        "Projeto em Computação II",
+        "Trabalho de Conclusão de Curso",
+        "Atividades Complementares Flexíveis",
+        "Optativa 9",
+        "Optativa 10",
+        "Optativa 11"
     ]
 };

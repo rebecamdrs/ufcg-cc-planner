@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { MAPA_PERIODOS } from "./constants/mapa_periodos"
 import { ColunaPeriodo } from "./components/ColunaPeriodo"
 import "./App.css"
@@ -54,10 +54,37 @@ export default function App() {
 
     // busca cadeira a partir do nome
     function buscarCadeira(nome) {
-        const padrao = { nome: nome, creditos: '-', carga_horaria: '-' }
-        return cadeiras.find(c => c.nome === nome) || padrao
+    if (!nome) return null;
+
+    if (nome.startsWith("Atividades Complementares")) {
+        return { nome: nome, creditos: 0, carga_horaria: 120 };
+    }
+    if (nome.startsWith("Optativa")) {
+        return { nome: nome, creditos: 4, carga_horaria: 60 };
     }
 
+    const padrao = { nome: nome, creditos: '-', carga_horaria: '-' };
+    return cadeiras.find((c) => c.nome === nome) || padrao;
+}
+    
+    const listaOptativasDisponiveis = useMemo(() => {
+        const nomesObrigatorias = new Set(
+            Object.values(MAPA_PERIODOS)
+                .flat()
+                .filter((n) => !n.startsWith("Optativa") && !n.startsWith("Atividades"))
+        );
+        return cadeiras.filter((c) => !nomesObrigatorias.has(c.nome));
+    }, [cadeiras]);
+
+    function handleTrocarOptativa(periodoNum, indexItem, nomeEscolhido, nomeOriginal) {
+        setGrade((prev) => {
+            const novoPeriodo = [...prev[periodoNum]];
+            const nomePadraoOriginal = MAPA_PERIODOS[periodoNum]?.[indexItem] || nomeOriginal;
+
+            novoPeriodo[indexItem] = nomeEscolhido || nomePadraoOriginal;
+            return { ...prev, [periodoNum]: novoPeriodo };
+        });
+    }
 
     // move cadeira para novo periodo
     function moverCadeira(nomeCadeira, novoPeriodo) {
@@ -157,6 +184,8 @@ export default function App() {
                         onMoverCadeira={moverCadeira}
                         cadeiraSelecionada={cadeiraSelecionada}
                         setCadeiraSelecionada={setCadeiraSelecionada}
+                        listaOptativas={listaOptativasDisponiveis}
+                        onTrocarOptativa={handleTrocarOptativa}
                     />
                 ))}
 
