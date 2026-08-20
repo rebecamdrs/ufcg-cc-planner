@@ -5,6 +5,64 @@ import "./App.css"
 import iconeLixeira from "./assets/icone-lixeira.svg"
 import toast, { Toaster } from 'react-hot-toast'
 
+const CORRECAO_NOMES = {
+  "calculo diferencial": "Cálculo Diferencial e Integral I",
+  "integral i": "Cálculo Diferencial e Integral I",
+  "integral ii": "Cálculo Diferencial e Integral II",
+  "organizacao": "Organização e Arquitetura de Computadores",
+  "arquitetura de computadores": "Organização e Arquitetura de Computadores",
+  "estruturas de dados": "Estruturas de Dados e Algoritmos",
+  "algoritmos": "Estruturas de Dados e Algoritmos",
+  "laboratorio de estruturas de dados": "Laboratório de Estruturas de Dados e Algoritmos",
+  "laboratorio de estruturas de dados e algoritmos": "Laboratório de Estruturas de Dados e Algoritmos"
+};
+
+const REQUISITOS_GARANTIDOS = {
+  "Programação II": ["Programação I", "Laboratório de Programação I"],
+  "Laboratório de Programação II": ["Programação I", "Laboratório de Programação I"],
+  "Estruturas de Dados e Algoritmos": ["Programação II", "Laboratório de Programação II"],
+  "Laboratório de Estruturas de Dados e Algoritmos": ["Programação II", "Laboratório de Programação II"]
+};
+
+function sanitizarCadeiras(dadosBrutos) {
+  if (!Array.isArray(dadosBrutos)) return [];
+
+  return dadosBrutos.map((disc) => {
+    if (!disc || !disc.nome) return disc;
+    const nomeLimpo = disc.nome.trim();
+
+    const reqsNormalizados = (disc.prerequisitos || []).flatMap((req) => {
+      if (!req || typeof req !== "string") return [];
+
+      // Remove anotações residuais como "CO-REQUISITO: ..."
+      let texto = req.replace(/co-requisito:.*$/i, "").trim();
+      if (!texto) return [];
+
+      const chave = texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+      return [CORRECAO_NOMES[chave] || texto];
+    });
+
+    // coloca requisitos necessarios
+    const requisitosExtras = REQUISITOS_GARANTIDOS[nomeLimpo] || [];
+    const todosReqs = [...reqsNormalizados, ...requisitosExtras];
+
+    // Remove duplicatas e referências a si mesma
+    const reqsUnicos = Array.from(new Set(todosReqs)).filter(
+      (req) => req !== nomeLimpo
+    );
+
+    return {
+      ...disc,
+      nome: nomeLimpo,
+      prerequisitos: reqsUnicos
+    };
+  });
+}
+
 export default function App() {
     const [cadeiras, setCadeiras] = useState([])
 
@@ -75,11 +133,14 @@ export default function App() {
 
     // Busca as cadeiras do json do git
     useEffect(() => {
-        fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
-            .then(resposta => resposta.json())
-            .then(dados => setCadeiras(dados))
-            .catch(erro => console.error("Erro ao carregar dados:", erro))
-    }, [])
+  fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
+    .then((resposta) => resposta.json())
+    .then((dados) => {
+      const dadosTratados = sanitizarCadeiras(dados);
+      setCadeiras(dadosTratados);
+    })
+    .catch((erro) => console.error("Erro ao carregar dados:", erro));
+}, []);
 
     // busca cadeira a partir do nome
     function buscarCadeira(nome) {
