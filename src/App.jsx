@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react"
 import { MAPA_PERIODOS } from "./constants/mapa_periodos"
 import { ColunaPeriodo } from "./components/ColunaPeriodo"
 import "./App.css"
-import iconeLixeira from "./assets/icone-lixeira.svg"
 import toast, { Toaster } from 'react-hot-toast'
 
 const CORRECAO_NOMES = {
@@ -77,10 +76,163 @@ export default function App() {
         localStorage.setItem("grade_planejada", JSON.stringify(grade)); // guarda a grade no storage
     }, [grade])
 
+    /** RESET TOTAL */
     function resetarGrade() {
-        if (confirm("Deseja restaurar a matriz curricular padrão?")) {
-            setGrade(MAPA_PERIODOS)
-        }
+        if (!confirm('Deseja restaurar a matriz padrão? (Suas cadeiras pagas continuarão nos períodos atuais)')) return
+
+        setGrade((gradeAtual) => {
+            const novaGrade = {}
+            const cadeirasPagasSet = new Set(cadeirasPagas)
+
+            // Mapeia em qual período cada cadeira PAGA se encontra atualmente na grade do usuário
+            const mapaPeriodosPagas = {}
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+                (cadeiras || []).forEach((c) => {
+                    if (cadeirasPagasSet.has(c)) {
+                        mapaPeriodosPagas[c] = periodo
+                    }
+                })
+            })
+
+            // cria os periodos da matriz padrão vazios
+            Object.keys(MAPA_PERIODOS).forEach((periodo) => {
+                novaGrade[periodo] = []
+            })
+
+            // add as cadeiras padrao menos as pagas
+            Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeiras]) => {
+                cadeiras.forEach((cadeira) => {
+                    // Se a cadeira for paga e foi movida para outro período, não insere no período original
+                    const periodoOndeEstaPaga = mapaPeriodosPagas[cadeira]
+                    if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) {
+                        return
+                    }
+
+                    if (!cadeirasPagasSet.has(cadeira)) {
+                        novaGrade[periodo].push(cadeira)
+                    }
+                })
+            })
+
+            // poe as cadeiras pagas de volta no periodo onde estao atualmente
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+                const cadeirasPagasNoPeriodo = (cadeiras || []).filter((cadeira) =>
+                    cadeirasPagasSet.has(cadeira)
+                )
+
+                if (cadeirasPagasNoPeriodo.length === 0) {
+                    return
+                }
+
+                // se for um periodo extra
+                if (!novaGrade[periodo]) {
+                    novaGrade[periodo] = []
+                }
+
+                cadeirasPagasNoPeriodo.forEach((c) => {
+                    if (!novaGrade[periodo].includes(c)) {
+                        novaGrade[periodo].push(c)
+                    }
+                })
+            })
+
+            return novaGrade
+        })
+    }
+
+    /** RESTAURAR MANTENDO OPTATIVAS E PAGAS */
+    function resetarMantendoOptativas() {
+        if (!confirm('Deseja restaurar a matriz mantendo suas optativas e cadeiras pagas?')) return
+
+        setGrade((gradeAtual) => {
+            const novaGrade = {}
+            const cadeirasJaAdicionadas = new Set()
+            const cadeirasPagasSet = new Set(cadeirasPagas)
+
+            // mapeia em qual período cada cadeira paga ta atualmente
+            const mapaPeriodosPagas = {}
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+                const listaCadeiras = cadeiras || []
+                listaCadeiras.forEach((c) => {
+                    if (cadeirasPagasSet.has(c)) {
+                        mapaPeriodosPagas[c] = periodo
+                    }
+                })
+            })
+
+            // mapeia optativas selecionadas apenas para o periodo onde foram colocadas
+            const optativasCustomPorPeriodo = {}
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+                optativasCustomPorPeriodo[periodo] = []
+                const listaCadeiras = cadeiras || []
+                listaCadeiras.forEach((c) => {
+                    const ehPadrao = Object.values(MAPA_PERIODOS).flat().includes(c)
+                    // se nn for cadeira padrao da matriz (optativa escolhida pelo usuário) e não estiver paga
+                    if (!ehPadrao && !cadeirasPagasSet.has(c)) {
+                        optativasCustomPorPeriodo[periodo].push(c)
+                    }
+                })
+            })
+
+            // add uma cadeira somente se nao estiver na grade
+            function adicionarCadeira(periodo, cadeira) {
+                if (!cadeira || cadeirasJaAdicionadas.has(cadeira)) return
+
+                // se for um periodo extra cria o array apenas ao adicionar a cadeira
+                if (!novaGrade[periodo]) {
+                    novaGrade[periodo] = []
+                }
+
+                novaGrade[periodo].push(cadeira)
+                cadeirasJaAdicionadas.add(cadeira)
+            }
+
+            // refaz os periodos da matriz padrao
+            Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
+                novaGrade[periodo] = []
+                const optativasDoPeriodo = optativasCustomPorPeriodo[periodo] || []
+                let idxOptativaLocal = 0
+
+                cadeirasPadrao.forEach((cadeiraPadrao) => {
+                    // se a cadeira padrao estiver paga e foi movida para outro periodo libera o slot original
+                    const periodoOndeEstaPaga = mapaPeriodosPagas[cadeiraPadrao]
+                    if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) {
+                        return
+                    }
+
+                    // se a cadeira padrao estiver paga, ela sera adicionada depois
+                    // no periodo onde esta atualmente
+                    if (cadeirasPagasSet.has(cadeiraPadrao)) {
+                        return
+                    }
+
+                    // mantem a optativa escolhida pelo user NO MESMO PERÍODO
+                    if (cadeiraPadrao.startsWith('Optativa')) {
+                        if (idxOptativaLocal < optativasDoPeriodo.length) {
+                            const optativaCustom = optativasDoPeriodo[idxOptativaLocal]
+                            idxOptativaLocal++
+                            adicionarCadeira(periodo, optativaCustom)
+                            cadeirasJaAdicionadas.add(cadeiraPadrao)
+                            return
+                        }
+                    }
+
+                    adicionarCadeira(periodo, cadeiraPadrao)
+                })
+            })
+
+            // mantem cadeiras pagas que tao em periodos extras
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+                const listaCadeiras = cadeiras || []
+                listaCadeiras.forEach((cadeira) => {
+                    if (cadeirasPagasSet.has(cadeira)) {
+                        adicionarCadeira(periodo, cadeira)
+                    }
+                })
+            })
+
+            return novaGrade
+        })
     }
 
     // guarda a cadeira que o mouse ta em cima
@@ -157,7 +309,14 @@ export default function App() {
         return cadeiras.find((c) => c.nome === nome) || padrao;
     }
 
-    const [cadeirasPagas, setCadeirasPagas] = useState([])
+    const [cadeirasPagas, setCadeirasPagas] = useState(() => {
+        const salvas = localStorage.getItem('cadeirasPagas')
+        return salvas ? JSON.parse(salvas) : []
+    })
+
+    useEffect(() => {
+        localStorage.setItem('cadeirasPagas', JSON.stringify(cadeirasPagas))
+    }, [cadeirasPagas])
 
     // atualiza a lista de cadeiras pagas
     function pagarCadeira(cadeira) {
@@ -290,10 +449,54 @@ export default function App() {
                     <span className="tag-header">Matriz Curricular</span>
                     <h1 className="titulo-principal">Planner CC</h1>
                 </div>
-                <button className="botao-reset" onClick={resetarGrade}>
-                    <img src={iconeLixeira} alt="Resetar" className="icone-lixeira" />
-                    <span>Resetar Grade</span>
-                </button>
+                <div className="botoes-header">
+                    <button
+                        className="botao-reset botao-reset-secundario"
+                        onClick={resetarMantendoOptativas}
+                        title="Restaura a grade padrão mantendo suas escolhas de optativas e cadeiras pagas"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icone-botao lucide lucide-rotate-ccw"
+                        >
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                        </svg>
+                        <span>Restaurar</span>
+                    </button>
+
+                    <button
+                        className="botao-reset"
+                        onClick={resetarGrade}
+                        title="Restaura a matriz original (suas cadeiras pagas continuarão salvas)"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icone-botao lucide lucide-trash"
+                        >
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        <span>Reset Total</span>
+                    </button>
+                </div>
             </header>
 
             <div className="container-periodos">
