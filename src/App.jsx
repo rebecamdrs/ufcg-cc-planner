@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react"
 import { MAPA_PERIODOS } from "./constants/mapa_periodos"
 import { ColunaPeriodo } from "./components/ColunaPeriodo"
 import "./App.css"
-import iconeLixeira from "./assets/icone-lixeira.svg"
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function App() {
@@ -14,14 +13,66 @@ export default function App() {
         return gradeSalva ? JSON.parse(gradeSalva) : MAPA_PERIODOS
     })
 
+
     // efeito que é ativado sempre q a grade mudar
     useEffect(() => {
         localStorage.setItem("grade_planejada", JSON.stringify(grade)); // guarda a grade no storage
     }, [grade])
 
+    /** RESET TOTAL */
     function resetarGrade() {
-        if (confirm("Deseja restaurar a matriz curricular padrão?")) {
-            setGrade(MAPA_PERIODOS)
+        if (confirm('Deseja restaurar a matriz padrão? (Suas cadeiras pagas continuarão nos períodos atuais)')) {
+            setGrade((gradeAtual) => {
+                const novaGrade = {}
+
+                Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
+                    // pega as cadeiras que já foram pagas e estao nesse período
+                    const pagasNessePeriodo = (gradeAtual[periodo] || []).filter((cadeira) =>
+                        cadeirasPagas.includes(cadeira)
+                    )
+
+                    // pega as cadeiras padrão do período que ainda nao foram pagas
+                    const padraoNaoPagas = cadeirasPadrao.filter(
+                        (cadeira) => !cadeirasPagas.includes(cadeira)
+                    )
+
+                    // junta as pagas + o padrão não pago
+                    novaGrade[periodo] = [...pagasNessePeriodo, ...padraoNaoPagas]
+                })
+
+                return novaGrade
+            })
+        }
+    }
+
+    /** RESET PARCIAL */
+    function resetarMantendoOptativas() {
+        if (confirm('Deseja restaurar a matriz mantendo suas optativas e cadeiras pagas?')) {
+            setGrade((gradeAtual) => {
+                const novaGrade = {}
+                const jaAdicionadas = []
+
+                Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
+                    const cadeirasPeriodo = []
+
+                    cadeirasPadrao.forEach((cadeiraPadrao, index) => {
+                        const cadeiraAtual = gradeAtual[periodo]?.[index]
+
+                        const isPaga = cadeiraAtual && cadeirasPagas.includes(cadeiraAtual)
+                        const isOptativa = cadeiraPadrao.startsWith('Optativa') && cadeiraAtual
+                        const cadeiraEscolhida = (isPaga || isOptativa) ? cadeiraAtual : cadeiraPadrao
+
+                        if (!jaAdicionadas.includes(cadeiraEscolhida)) {
+                            cadeirasPeriodo.push(cadeiraEscolhida)
+                            jaAdicionadas.push(cadeiraEscolhida)
+                        }
+                    })
+
+                    novaGrade[periodo] = cadeirasPeriodo
+                })
+
+                return novaGrade
+            })
         }
     }
 
@@ -96,7 +147,14 @@ export default function App() {
         return cadeiras.find((c) => c.nome === nome) || padrao;
     }
 
-    const [cadeirasPagas, setCadeirasPagas] = useState([])
+    const [cadeirasPagas, setCadeirasPagas] = useState(() => {
+        const salvas = localStorage.getItem('cadeirasPagas')
+        return salvas ? JSON.parse(salvas) : []
+    })
+
+    useEffect(() => {
+        localStorage.setItem('cadeirasPagas', JSON.stringify(cadeirasPagas))
+    }, [cadeirasPagas])
 
     // atualiza a lista de cadeiras pagas
     function pagarCadeira(cadeira) {
@@ -229,10 +287,54 @@ export default function App() {
                     <span className="tag-header">Matriz Curricular</span>
                     <h1 className="titulo-principal">Planner CC</h1>
                 </div>
-                <button className="botao-reset" onClick={resetarGrade}>
-                    <img src={iconeLixeira} alt="Resetar" className="icone-lixeira" />
-                    <span>Resetar Grade</span>
-                </button>
+                <div className="botoes-header">
+                    <button
+                        className="botao-reset botao-reset-secundario"
+                        onClick={resetarMantendoOptativas}
+                        title="Restaura a grade padrão mantendo suas escolhas de optativas e cadeiras pagas"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icone-botao lucide lucide-rotate-ccw"
+                        >
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                        </svg>
+                        <span>Restaurar</span>
+                    </button>
+
+                    <button
+                        className="botao-reset"
+                        onClick={resetarGrade}
+                        title="Restaura a matriz original (suas cadeiras pagas continuarão salvas)"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icone-botao lucide lucide-trash"
+                        >
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        <span>Reset Total</span>
+                    </button>
+                </div>
             </header>
 
             <div className="container-periodos">
