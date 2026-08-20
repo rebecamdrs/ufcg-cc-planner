@@ -89,7 +89,7 @@ export function CardCadeira({
         if (cadeira.nome.startsWith("Optativa")) {
           setMenuAberto((prev) => !prev);
         } else {
-          pagarCadeira(cadeira.nome);
+          pagarCadeira(cadeira);
         }
       }}
       onMouseEnter={() => !cadeira.nome.startsWith("Optativa") && setCadeiraSelecionada(cadeira)}

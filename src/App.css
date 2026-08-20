@@ -380,6 +380,7 @@ body {
   background-color: var(--bg-alert-red);
   border-radius: 16px;
   box-shadow: 0 8px 12px rgba(182, 182, 182, 0.15);
+  border: 1px solid rgba(245, 11, 11, 0.2);
   color: var(--text-title);
   font-family: var(--font-body);
 }
@@ -435,6 +436,7 @@ body {
   from {
     transform: translateX(12px);
   }
+
   to {
     transform: translateX(0);
   }
@@ -444,6 +446,7 @@ body {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(12px);
   }
@@ -476,7 +479,7 @@ body {
 }
 
 .card-cadeira.card-paga .badge-subtexto-card {
-  color: var(--success-green) !important; 
+  color: var(--success-green) !important;
 }
 
 .card-cadeira.card-paga:hover {
@@ -517,4 +520,26 @@ body {
 .card-cadeira.card-paga .btn-trocar-optativa:hover {
   color: var(--success-green);
   opacity: 1;
+}
+
+.toast-custom-card.toast-alerta {
+  background-color: var(--accent-yellow-bg);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.toast-custom-card.toast-alerta .toast-icone-wrapper {
+  color: var(--accent-yellow);
+  background-color: var(--accent-yellow-glow);
+}
+
+.toast-custom-card.toast-alerta .toast-titulo {
+  color: #b45309;
+}
+
+.toast-custom-card.toast-alerta .toast-mensagem {
+  color: #78350f;
+}
+
+.toast-custom-card.toast-alerta .toast-svg {
+  fill: none;
 }

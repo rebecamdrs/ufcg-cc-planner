@@ -44,6 +44,35 @@ export default function App() {
         ), { id: 'erro-movimentacao', duration: 4000 });
     }
 
+    const dispararToastAlerta = (mensagem) => {
+        toast.custom((t) => (
+            <div className={`toast-custom-card toast-alerta ${t.visible ? 'toast-entrar' : 'toast-sair'}`}>
+                <div className="toast-icone-wrapper">
+                    <svg
+                        className="toast-svg"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                        <path d="M12 9v4" />
+                        <path d="M12 17h.01" />
+                    </svg>
+                </div>
+                <div className="toast-conteudo">
+                    <span className="toast-titulo">AVISO</span>
+                    <span className="toast-mensagem">{mensagem}</span>
+                </div>
+            </div>
+        ), { id: 'alerta-requisito', duration: 4000 });
+    }
+
     // Busca as cadeiras do json do git
     useEffect(() => {
         fetch('https://raw.githubusercontent.com/daltonserey/ppc-2023-em-dados/master/dados/disciplinas.json')
@@ -70,30 +99,33 @@ export default function App() {
     const [cadeirasPagas, setCadeirasPagas] = useState([])
 
     // atualiza a lista de cadeiras pagas
-    function pagarCadeira(nomeCadeira) {
+    function pagarCadeira(cadeira) {
+        const nomeCadeira = cadeira.nome
         setCadeirasPagas((listaAnterior) => {
             // se a cadeira ja esta na lista, remove (desmarca)
             if (cadeirasPagas.includes(nomeCadeira)) {
                 return listaAnterior.filter((nome) => nome !== nomeCadeira)
             }
-            // se nao estiver, adiciona no final da lista (marca)
-            return [...listaAnterior, nomeCadeira]
+            // se nao estiver, verifica se ta liberada e adiciona no final da lista (marca)
+            if (isLiberada(cadeira, listaAnterior)) {
+                return [...listaAnterior, nomeCadeira]
+            }
+            dispararToastAlerta('Pré-Requisitos não foram atendidos.')
+            return listaAnterior
         })
     }
 
     /* verofica se uma cadeira está liberada para pagar */
-    function isLiberada(cadeira, cadeirasPagas) {
+    function isLiberada(cadeira, pagas) {
         const requisitos = cadeira.prerequisitos || []
-        // se  não tem pré-requisitos, está liberada
         if (requisitos.length === 0) return true
 
-        // fica liberada se todos os requisitos estiverem na lista de pagas
-        for (const requisito of requisitos) {
-            if (!cadeirasPagas.includes(requisito)) {
-                return false
-            }
-        }
-        return true
+        // Para cada pré-requisito, busca o objeto da disciplina para pegar o nome
+        return requisitos.every((req) => {
+            const objReq = cadeiras.find((c) => c.codigo === req || c.nome === req)
+            const nomeReq = objReq ? objReq.nome : req
+            return pagas.includes(nomeReq)
+        })
     }
 
     const listaOptativasDisponiveis = useMemo(() => {
