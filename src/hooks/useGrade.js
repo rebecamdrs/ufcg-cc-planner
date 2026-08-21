@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { MAPA_PERIODOS } from "../constants/mapa_periodos"
+import { COREQUISITOS_PADRAO } from "../utils/sanitizarCadeiras.js"
 
 export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToastErro }) {
     // inicializa a grade vendo se tem alguma no localStorage antes
@@ -10,7 +11,7 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
 
     // efeito que é ativado sempre q a grade mudar
     useEffect(() => {
-        localStorage.setItem("grade_planejada", JSON.stringify(grade)); // guarda a grade no storage
+        localStorage.setItem("grade_planejada", JSON.stringify(grade)) // guarda a grade no storage
     }, [grade])
 
     /** Faz o reset total da grade e volta para a original (do PPC);
@@ -22,8 +23,8 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
 
             // Mapeia em qual período cada cadeira PAGA se encontra atualmente na grade do usuário
             const mapaPeriodosPagas = {}
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
-                (cadeiras || []).forEach((c) => {
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
+                (cadeirasLista || []).forEach((c) => {
                     if (cadeirasPagasSet.has(c)) {
                         mapaPeriodosPagas[c] = periodo
                     }
@@ -36,8 +37,8 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
             })
 
             // add as cadeiras padrao menos as pagas
-            Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeiras]) => {
-                cadeiras.forEach((cadeira) => {
+            Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
+                cadeirasPadrao.forEach((cadeira) => {
                     // Se a cadeira for paga e foi movida para outro período, não insere no período original
                     const periodoOndeEstaPaga = mapaPeriodosPagas[cadeira]
                     if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) {
@@ -51,8 +52,8 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
             })
 
             // poe as cadeiras pagas de volta no periodo onde estao atualmente
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
-                const cadeirasPagasNoPeriodo = (cadeiras || []).filter((cadeira) =>
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
+                const cadeirasPagasNoPeriodo = (cadeirasLista || []).filter((cadeira) =>
                     cadeirasPagasSet.has(cadeira)
                 )
 
@@ -84,8 +85,8 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
 
             // mapeia em qual período cada cadeira paga ta atualmente
             const mapaPeriodosPagas = {}
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
-                const listaCadeiras = cadeiras || []
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
+                const listaCadeiras = cadeirasLista || []
                 listaCadeiras.forEach((c) => {
                     if (cadeirasPagasSet.has(c)) {
                         mapaPeriodosPagas[c] = periodo
@@ -95,9 +96,9 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
 
             // mapeia optativas selecionadas apenas para o periodo onde foram colocadas
             const optativasCustomPorPeriodo = {}
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
                 optativasCustomPorPeriodo[periodo] = []
-                const listaCadeiras = cadeiras || []
+                const listaCadeiras = cadeirasLista || []
                 listaCadeiras.forEach((c) => {
                     const ehPadrao = Object.values(MAPA_PERIODOS).flat().includes(c)
                     // se nn for cadeira padrao da matriz (optativa escolhida pelo usuário) e não estiver paga
@@ -132,7 +133,6 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
                     if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) return
 
                     // se a cadeira padrao estiver paga, ela sera adicionada depois
-                    // no periodo onde esta atualmente
                     if (cadeirasPagasSet.has(cadeiraPadrao)) return
 
                     // mantem a optativa escolhida pelo user NO MESMO PERÍODO
@@ -151,8 +151,8 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
             })
 
             // mantem cadeiras pagas que tao em periodos extras
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeiras]) => {
-                const listaCadeiras = cadeiras || []
+            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
+                const listaCadeiras = cadeirasLista || []
                 listaCadeiras.forEach((cadeira) => {
                     if (cadeirasPagasSet.has(cadeira)) {
                         adicionarCadeira(periodo, cadeira)
@@ -174,77 +174,96 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
         })
     }
 
-    /** Move cadeira para novo período */
+    /** Move cadeira (e seus co-requisitos vinculados) para novo período */
     function moverCadeira(nomeCadeira, novoPeriodo) {
-        const periodoDestino = Number(novoPeriodo);
-        const preRequisitos = buscarCadeira(nomeCadeira).prerequisitos || []
+        if (!nomeCadeira) return
+        const periodoDestino = Number(novoPeriodo)
+
+        // Se tiver co-requisito padrão cadastrado, movimenta ambos juntos
+        const parceiros = COREQUISITOS_PADRAO?.[nomeCadeira] || []
+        const grupoAMover = [nomeCadeira, ...parceiros]
 
         setGrade((gradeAtual) => {
-            // valida os pre requisistos
-            for (const requisitos of preRequisitos) {
-                const objReq = cadeiras.find((c) => c.codigo === requisitos || c.nome === requisitos)
-                const nomeReq = objReq ? objReq.nome : requisitos
+            // 1. Validação de pré-requisitos para todas as cadeiras do grupo
+            for (const cadeiraAtual of grupoAMover) {
+                const objAtual = buscarCadeira(cadeiraAtual) || {}
+                const preRequisitos = objAtual.prerequisitos || []
 
-                // encontra o periodo do pre requisito
-                const periodoReq = Object.keys(gradeAtual).find((p) => gradeAtual[p].includes(nomeReq))
+                for (const requisito of preRequisitos) {
+                    // ignora vínculo entre elas
+                    if (grupoAMover.includes(requisito)) continue
 
-                // se o periodo ta no mesmo periodo ou em um anterior ao destino
-                if (periodoReq !== undefined && Number(periodoReq) >= periodoDestino) {
-                    dispararToastErro('Essa cadeira não pode ser movida para antes dos seus pré-requisitos.')
-                    return gradeAtual
-                }
-            }
+                    const objReq = cadeiras.find((c) => c.codigo === requisito || c.nome === requisito)
+                    const nomeReq = objReq ? objReq.nome : requisito
+                    const periodoReq = Object.keys(gradeAtual).find((p) => gradeAtual[p]?.includes(nomeReq))
 
-            // valida os pos requisitos (bloqueadas)
-            for (const p in gradeAtual) {
-                const numPeriodo = Number(p)
-
-                for (const cadeira of gradeAtual[p]) {
-                    if (cadeira === nomeCadeira) continue
-
-                    const reqsDaCadeira = buscarCadeira(cadeira).prerequisitos || []
-                    const objCadeiraSendoMovida = buscarCadeira(nomeCadeira)
-
-                    // verifica se a cadeira atual exige a cadeira sendo movida 
-                    const ehDependente = reqsDaCadeira.includes(nomeCadeira) || (objCadeiraSendoMovida.codigo && reqsDaCadeira.includes(objCadeiraSendoMovida.codigo))
-
-                    if (ehDependente && numPeriodo <= periodoDestino) {
-                        dispararToastErro('Essa cadeira não pode ser movida para para depois das cadeiras que dependem dela.')
+                    if (periodoReq !== undefined && Number(periodoReq) >= periodoDestino) {
+                        dispararToastErro(`Não é possível mover: ${cadeiraAtual} depende de ${nomeReq}.`)
                         return gradeAtual
                     }
                 }
             }
 
-            const rascunho = {};
+            // 2. Validação de pós-requisitos (cadeiras que dependem de alguma do grupo)
             for (const p in gradeAtual) {
-                rascunho[Number(p)] = gradeAtual[p].filter((n) => n !== nomeCadeira);
+                const numPeriodo = Number(p)
+
+                for (const cadeiraNaGrade of gradeAtual[p]) {
+                    if (grupoAMover.includes(cadeiraNaGrade)) continue
+
+                    const reqsDaCadeira = buscarCadeira(cadeiraNaGrade)?.prerequisitos || []
+
+                    for (const cadeiraAtual of grupoAMover) {
+                        const objCadeiraAtual = buscarCadeira(cadeiraAtual) || {}
+                        const ehDependente =
+                            reqsDaCadeira.includes(cadeiraAtual) ||
+                            (objCadeiraAtual.codigo && reqsDaCadeira.includes(objCadeiraAtual.codigo))
+
+                        if (ehDependente && numPeriodo <= periodoDestino) {
+                            dispararToastErro(
+                                `Não é possível mover: ${cadeiraNaGrade} depende de ${cadeiraAtual}.`
+                            )
+                            return gradeAtual
+                        }
+                    }
+                }
             }
 
+            // 3. Monta o rascunho removendo o grupo dos períodos antigos
+            const rascunho = {}
+            for (const p in gradeAtual) {
+                rascunho[Number(p)] = (gradeAtual[p] || []).filter((n) => !grupoAMover.includes(n))
+            }
+
+            // 4. Adiciona o grupo no período de destino
             if (!rascunho[periodoDestino]) {
-                rascunho[periodoDestino] = [];
+                rascunho[periodoDestino] = []
             }
-            rascunho[periodoDestino].push(nomeCadeira);
+            grupoAMover.forEach((nome) => {
+                rascunho[periodoDestino].push(nome)
+            })
 
+            // 5. Reorganiza e ajusta tamanho da grade
             const periodosComMaterias = Object.keys(rascunho)
                 .map(Number)
                 .filter((p) => rascunho[p].length > 0)
-                .sort((a, b) => a - b);
-            const totalPeriodos = Math.max(9, periodosComMaterias.length);
-            const limitePeriodos = Math.min(totalPeriodos, 14);
+                .sort((a, b) => a - b)
+            const totalPeriodos = Math.max(9, periodosComMaterias.length)
+            const limitePeriodos = Math.min(totalPeriodos, 14)
 
-            const novaGrade = {};
-
+            const novaGrade = {}
             for (let i = 1; i <= limitePeriodos; i++) {
-                novaGrade[i] = [];
+                novaGrade[i] = []
             }
             periodosComMaterias.forEach((p, index) => {
-                const novoIndice = index + 1;
+                const novoIndice = index + 1
                 if (novoIndice <= 14) {
-                    novaGrade[novoIndice] = rascunho[p];
+                    novaGrade[novoIndice] = rascunho[p]
                 }
-            });
-            return novaGrade;
-        });
+            })
+
+            return novaGrade
+        })
     }
 
     return { grade, resetarGrade, resetarMantendoOptativas, handleTrocarOptativa, moverCadeira }

@@ -1,32 +1,39 @@
-import { useEffect, useState } from "react"
-import { isLiberada } from "../utils/sanitizarCadeiras.js"
+import { useEffect, useState } from "react";
+import { isLiberada, COREQUISITOS_PADRAO } from "../utils/sanitizarCadeiras.js";
 
-export function useCadeirasPagas(cadeiras, onErroPreRequisito) {
-    const [cadeirasPagas, setCadeirasPagas] = useState(() => {
-        const salvas = localStorage.getItem('cadeirasPagas')
-        return salvas ? JSON.parse(salvas) : []
-    })
+export function useCadeirasPagas(cadeiras = [], onErroPreRequisito) {
+  const [cadeirasPagas, setCadeirasPagas] = useState(() => {
+    const salvas = localStorage.getItem("cadeirasPagas");
+    return salvas ? JSON.parse(salvas) : [];
+  });
 
-    useEffect(() => {
-        localStorage.setItem('cadeirasPagas', JSON.stringify(cadeirasPagas))
-    }, [cadeirasPagas])
+  useEffect(() => {
+    localStorage.setItem("cadeirasPagas", JSON.stringify(cadeirasPagas));
+  }, [cadeirasPagas]);
 
-    /** Atualiza a lista de cadeiras pagas */
-    function pagarCadeira(cadeira) {
-        const nomeCadeira = cadeira.nome
-        setCadeirasPagas((listaAnterior) => {
-            // se a cadeira ja esta na lista, remove (desmarca)
-            if (cadeirasPagas.includes(nomeCadeira)) {
-                return listaAnterior.filter((nome) => nome !== nomeCadeira)
-            }
-            // se nao estiver, verifica se ta liberada e adiciona no final da lista (marca)
-            if (isLiberada(cadeira, listaAnterior)) {
-                return [...listaAnterior, nomeCadeira]
-            }
-            onErroPreRequisito?.() // '?.' // só chama se erro existir
-            return listaAnterior
-        })
-    }
+  function pagarCadeira(cadeira) {
+    if (!cadeira?.nome) return;
 
-    return { cadeirasPagas, pagarCadeira }
+    const nomeCadeira = cadeira.nome;
+    const parceiros = COREQUISITOS_PADRAO[nomeCadeira] || [];
+    const grupo = [nomeCadeira, ...parceiros];
+
+    setCadeirasPagas((listaAnterior) => {
+      // Se já está marcada, desmarca o par
+      if (listaAnterior.includes(nomeCadeira)) {
+        return listaAnterior.filter((nome) => !grupo.includes(nome));
+      }
+
+      // Se não está marcada, verifica os pré-requisitos e adiciona o par
+      if (isLiberada(cadeira, listaAnterior, cadeiras)) {
+        const novosNomes = grupo.filter((nome) => !listaAnterior.includes(nome));
+        return [...listaAnterior, ...novosNomes];
+      }
+
+      onErroPreRequisito?.();
+      return listaAnterior;
+    });
+  }
+
+  return { cadeirasPagas, pagarCadeira };
 }

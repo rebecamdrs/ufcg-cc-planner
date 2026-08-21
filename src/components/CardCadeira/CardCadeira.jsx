@@ -45,11 +45,20 @@ export function CardCadeira({
   const nomeSelecionada = normalizar(cadeiraSelecionada?.nome);
   const isSelecionado = nomeSelecionada && nomeAtual === nomeSelecionada;
   const listaRequisitos = cadeiraSelecionada?.prerequisitos || [];
+  const listaCoRequisitos = cadeiraSelecionada?.corequisitos || [];
 
   function isPreRequisito() {
     if (!listaRequisitos || listaRequisitos.length === 0) return false;
     for (const requisito of listaRequisitos) {
       if (normalizar(requisito) === nomeAtual) return true;
+    }
+    return false;
+  }
+
+  function isCoRequisito() {
+    if (!listaCoRequisitos || listaCoRequisitos.length === 0) return false;
+    for (const corequisito of listaCoRequisitos) {
+      if (normalizar(corequisito) === nomeAtual) return true;
     }
     return false;
   }
@@ -67,6 +76,9 @@ export function CardCadeira({
   let aviso = "";
   if (isSelecionado) {
     statusClass = "card-ativo";
+  } else if (isCoRequisito()) {
+    statusClass = "card-corequisito";
+    aviso = "Co-requisito";
   } else if (isPreRequisito()) {
     statusClass = "card-prerequisito";
     aviso = "Pré-requisito";
