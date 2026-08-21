@@ -20,9 +20,17 @@ export default function App() {
     const { dispararToastErro, dispararToastAlerta } = useToasts()
     const { cadeiras, buscarCadeira, listaOptativasDisponiveis } = useCadeiras()
 
-    const { cadeirasPagas, pagarCadeira } = useCadeirasPagas(cadeiras, () => dispararToastAlerta('Pré-Requisitos não foram atendidos.'))
+    const { cadeirasPagas, pagarCadeira, limparCadeirasPagas } = useCadeirasPagas(
+        cadeiras,
+        () => dispararToastAlerta('Pré-Requisitos não foram atendidos.')
+    )
 
     const { grade, resetarGrade, resetarMantendoOptativas, handleTrocarOptativa, moverCadeira } = useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToastErro })
+
+    const handleResetTotal = () => {
+        limparCadeirasPagas()
+        resetarGrade()
+    }
 
     return (
         <div className="container-principal">
@@ -30,7 +38,7 @@ export default function App() {
 
             <Header
                 onResetMantendoOptativas={resetarMantendoOptativas}
-                onResetTotal={resetarGrade}
+                onResetTotal={handleResetTotal}
             />
 
             <div className="container-periodos">

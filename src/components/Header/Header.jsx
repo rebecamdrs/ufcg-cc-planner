@@ -8,6 +8,17 @@ export function Header({ onResetMantendoOptativas, onResetTotal }) {
     const [modalResetTotalAberto, setModalResetTotalAberto] = useState(false)
     const [modalResetOptativasAberto, setModalResetOptativasAberto] = useState(false)
 
+    // Handlers que executam a ação e fecham o modal correspondente
+    const handleConfirmarOptativas = () => {
+        onResetMantendoOptativas()
+        setModalResetOptativasAberto(false)
+    }
+
+    const handleConfirmarTotal = () => {
+        onResetTotal()
+        setModalResetTotalAberto(false)
+    }
+
     return (
         <header className="header-app">
             <div>
@@ -40,7 +51,7 @@ export function Header({ onResetMantendoOptativas, onResetTotal }) {
                 <button
                     className="botao-reset"
                     onClick={() => setModalResetTotalAberto(true)}
-                    title="Restaura a matriz original (suas cadeiras pagas continuarão salvas)"
+                    title="Restaura a matriz original"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -61,20 +72,21 @@ export function Header({ onResetMantendoOptativas, onResetTotal }) {
                     <span>Reset Total</span>
                 </button>
             </div>
-            <ModalConfirmacao
-                isOpen={modalResetTotalAberto}
-                titulo="Restaurar Matriz?"
-                mensagem="Esta ação manterá as cadeiras pagas, mas restaurará a matriz para o estado inicial padrão."
-                onClose={() => setModalResetTotalAberto(false)}
-                onConfirm={onResetTotal}
-            />
 
             <ModalConfirmacao
                 isOpen={modalResetOptativasAberto}
-                titulo="Limpar Progresso?"
-                mensagem="Suas cadeiras pagas serão mantidas, mas suas optativas selecionadas continuarão selecionadas."
+                titulo="Restaurar Matriz?"
+                mensagem="Esta ação restaurará a matriz para o estado inicial padrão, mantendo suas optativas selecionadas e cadeiras pagas."
                 onClose={() => setModalResetOptativasAberto(false)}
-                onConfirm={onResetMantendoOptativas}
+                onConfirm={handleConfirmarOptativas}
+            />
+
+            <ModalConfirmacao
+                isOpen={modalResetTotalAberto}
+                titulo="Reset Total?"
+                mensagem="Esta ação apagará as alterações e voltará a matriz original."
+                onClose={() => setModalResetTotalAberto(false)}
+                onConfirm={handleConfirmarTotal}
             />
         </header>
     )

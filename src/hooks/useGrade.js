@@ -14,63 +14,13 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
         localStorage.setItem("grade_planejada", JSON.stringify(grade)) // guarda a grade no storage
     }, [grade])
 
-    /** Faz o reset total da grade e volta para a original (do PPC);
-     * Mantém as cadeiras pagas.*/
+    /** Faz o reset total da grade e volta para a original (do PPC)*/
     function resetarGrade() {
-        setGrade((gradeAtual) => {
+        setGrade(() => {
             const novaGrade = {}
-            const cadeirasPagasSet = new Set(cadeirasPagas)
-
-            // Mapeia em qual período cada cadeira PAGA se encontra atualmente na grade do usuário
-            const mapaPeriodosPagas = {}
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
-                (cadeirasLista || []).forEach((c) => {
-                    if (cadeirasPagasSet.has(c)) {
-                        mapaPeriodosPagas[c] = periodo
-                    }
-                })
-            })
-
-            // cria os periodos da matriz padrão vazios
-            Object.keys(MAPA_PERIODOS).forEach((periodo) => {
-                novaGrade[periodo] = []
-            })
-
-            // add as cadeiras padrao menos as pagas
             Object.entries(MAPA_PERIODOS).forEach(([periodo, cadeirasPadrao]) => {
-                cadeirasPadrao.forEach((cadeira) => {
-                    // Se a cadeira for paga e foi movida para outro período, não insere no período original
-                    const periodoOndeEstaPaga = mapaPeriodosPagas[cadeira]
-                    if (periodoOndeEstaPaga && periodoOndeEstaPaga !== periodo) {
-                        return
-                    }
-
-                    if (!cadeirasPagasSet.has(cadeira)) {
-                        novaGrade[periodo].push(cadeira)
-                    }
-                })
+                novaGrade[periodo] = [...cadeirasPadrao]
             })
-
-            // poe as cadeiras pagas de volta no periodo onde estao atualmente
-            Object.entries(gradeAtual || {}).forEach(([periodo, cadeirasLista]) => {
-                const cadeirasPagasNoPeriodo = (cadeirasLista || []).filter((cadeira) =>
-                    cadeirasPagasSet.has(cadeira)
-                )
-
-                if (cadeirasPagasNoPeriodo.length === 0) return
-
-                // se for um periodo extra
-                if (!novaGrade[periodo]) {
-                    novaGrade[periodo] = []
-                }
-
-                cadeirasPagasNoPeriodo.forEach((c) => {
-                    if (!novaGrade[periodo].includes(c)) {
-                        novaGrade[periodo].push(c)
-                    }
-                })
-            })
-
             return novaGrade
         })
     }
