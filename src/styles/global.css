@@ -30,6 +30,10 @@
   --accent-purple: #8b5cf6;
   --accent-purple-bg: #fbf3ff;
   --accent-purple-glow: rgba(139, 92, 246, 0.25);
+
+  --accent-pink: #ec4899;
+  --accent-pink-bg: #fdf2f8;
+  --accent-pink-glow: rgba(236, 72, 153, 0.2);
 }
 
 body {

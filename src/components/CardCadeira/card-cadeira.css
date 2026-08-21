@@ -54,6 +54,13 @@
   cursor: not-allowed;
 }
 
+.card-cadeira.card-corequisito {
+  border-color: var(--accent-pink);
+  background-color: var(--accent-pink-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-pink-glow), 0 8px 16px rgba(236, 72, 153, 0.12) !important;
+  transition: all 0.2s ease-in-out;
+}
+
 .card-cadeira.card-paga {
   background-color: var(--bg-success-light) !important;
   border-color: var(--success-green) !important;
@@ -140,12 +147,17 @@
 
 .card-cadeira.card-prerequisito .aviso-status {
   background-color: var(--accent-yellow);
-  color: #ffffff;
+  color: var(--bg-card);
 }
 
 .card-cadeira.card-bloqueado .aviso-status {
   background-color: var(--accent-purple);
-  color: #ffffff;
+  color: var(--bg-card);
+}
+
+.card-cadeira.card-corequisito .aviso-status {
+  background-color: var(--accent-pink);
+  color: var(--bg-card);
 }
 
 .card-cadeira .bolinha-alerta~.aviso-status {
@@ -187,16 +199,4 @@
 .card-cadeira.card-paga .btn-trocar-optativa:hover {
   color: var(--success-green);
   opacity: 1;
-}
-
-.card-cadeira.card-corequisito {
-  border-color: #ec4899 !important;
-  background-color: #fdf2f8 !important;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2), 0 8px 16px rgba(236, 72, 153, 0.12) !important;
-  transition: all 0.2s ease-in-out;
-}
-
-.card-cadeira.card-corequisito .aviso-status {
-  background-color: #ec4899;
-  color: #ffffff;
 }

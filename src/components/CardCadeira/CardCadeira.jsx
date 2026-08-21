@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { DropdownOptativas } from "../DropdownOptativas"
+import { DropdownOptativas } from "../DropdownOptativas/DropdownOptativas"
 import "./card-cadeira.css"
 
 export function CardCadeira({
