@@ -1,7 +1,12 @@
 import { useState } from "react";
 
-export function DropdownOptativas({ listaOptativas = [], onSelecionar, onClose }) {
+export function DropdownOptativas({ listaOptativas: rawOptativas = [], onSelecionar, onClose }) {
   const [busca, setBusca] = useState("");
+
+  // Remove duplicatas mantendo apenas o primeiro item de cada nome
+  const listaOptativas = rawOptativas.filter(
+    (item, index, self) => index === self.findIndex((t) => t.nome === item.nome)
+  );
 
   const listaFiltrada = listaOptativas.filter((item) =>
     item.nome.toLowerCase().includes(busca.toLowerCase())
