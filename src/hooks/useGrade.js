@@ -16,8 +16,6 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
     /** Faz o reset total da grade e volta para a original (do PPC);
      * Mantém as cadeiras pagas.*/
     function resetarGrade() {
-        if (!confirm('Deseja restaurar a matriz padrão? (Suas cadeiras pagas continuarão nos períodos atuais)')) return
-
         setGrade((gradeAtual) => {
             const novaGrade = {}
             const cadeirasPagasSet = new Set(cadeirasPagas)
@@ -79,8 +77,6 @@ export function useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToast
     /** Faz o reset mantendo as optativas selecionadas;
      * Mantém as cadeiras pagas.*/
     function resetarMantendoOptativas() {
-        if (!confirm('Deseja restaurar a matriz mantendo suas optativas e cadeiras pagas?')) return
-
         setGrade((gradeAtual) => {
             const novaGrade = {}
             const cadeirasJaAdicionadas = new Set()
