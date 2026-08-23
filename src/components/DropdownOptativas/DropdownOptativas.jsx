@@ -1,14 +1,28 @@
 import { useState } from "react"
 import "./dropdown.css"
 
-export function DropdownOptativas({ listaOptativas: rawOptativas = [], onSelecionar, onClose }) {
+export function DropdownOptativas({
+  listaOptativas: rawOptativas = [],
+  optativasEscolhidas = [],
+  valorAtual = null,
+  onSelecionar,
+  onClose
+}) {
   const [busca, setBusca] = useState("")
 
-  const listaOptativas = rawOptativas.filter(
+  // Remove duplicatas de nomes
+  const listaSemDuplicatas = rawOptativas.filter(
     (item, index, self) => index === self.findIndex((t) => t.nome === item.nome)
   )
 
-  const listaFiltrada = listaOptativas.filter((item) =>
+  // Oculta optativas já escolhidas em outros cards
+  const listaDisponiveis = listaSemDuplicatas.filter((item) => {
+    const jaEscolhida = optativasEscolhidas.includes(item.nome)
+    const ehAEscolhaDesteCard = item.nome === valorAtual
+    return !jaEscolhida || ehAEscolhaDesteCard
+  })
+
+  const listaFiltrada = listaDisponiveis.filter((item) =>
     item.nome.toLowerCase().includes(busca.toLowerCase())
   )
 
@@ -28,8 +42,8 @@ export function DropdownOptativas({ listaOptativas: rawOptativas = [], onSelecio
           <button
             key={item.nome}
             onClick={() => {
-              onSelecionar(item.nome);
-              onClose();
+              onSelecionar(item.nome)
+              onClose()
             }}
             className="dropdown-item"
           >
@@ -39,15 +53,15 @@ export function DropdownOptativas({ listaOptativas: rawOptativas = [], onSelecio
 
         {listaFiltrada.length === 0 && (
           <div className="dropdown-empty">
-            Nenhuma encontrada
+            Nenhuma optativa disponível
           </div>
         )}
       </div>
 
       <button
         onClick={() => {
-          onSelecionar(null);
-          onClose();
+          onSelecionar(null)
+          onClose()
         }}
         className="dropdown-clear-btn"
       >

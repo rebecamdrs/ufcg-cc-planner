@@ -11,7 +11,8 @@ export function ColunaPeriodo({
   listaOptativas,
   onTrocarOptativa,
   cadeirasPagas,
-  pagarCadeira
+  pagarCadeira,
+  optativasEscolhidas = [],
 }) {
 
   const cadeirasColuna = nomesCadeiras
@@ -47,6 +48,7 @@ export function ColunaPeriodo({
             cadeiraSelecionada={cadeiraSelecionada}
             setCadeiraSelecionada={setCadeiraSelecionada}
             listaOptativas={listaOptativas}
+            optativasEscolhidas={optativasEscolhidas}
             onSelecionarOptativa={(nomeEscolhido) =>
               onTrocarOptativa(numeroPeriodo, index, nomeEscolhido, cadeira.nome)
             }
