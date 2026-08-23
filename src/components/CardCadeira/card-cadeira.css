@@ -196,3 +196,24 @@
     color: var(--success-green);
     opacity: 1;
 }
+
+@media (max-width: 900px), (max-height: 500px) and (orientation: landscape) {
+  .card-cadeira {
+    padding: 4px 6px;
+    border-radius: 6px;
+  }
+
+  .titulo-cadeira {
+    font-size: 0.65rem;
+    line-height: 1.15;
+  }
+
+  .badge-subtexto-card {
+    font-size: 0.55rem;
+  }
+
+  .aviso-status {
+    font-size: 0.5rem;
+    padding: 1px 3px;
+  }
+}
