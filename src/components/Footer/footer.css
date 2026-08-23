@@ -1,20 +1,18 @@
 .rodape-autores {
-  position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
+  align-self: flex-end; 
+  flex-shrink: 0;
+  margin-top: 0.4rem;
   background-color: var(--bg-card);
-  padding: 0.65rem 1.25rem;
-  border-radius: 30px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
   border: 1px solid var(--border-card);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-family: var(--font-body);
   color: var(--text-body);
-  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  backdrop-filter: blur(8px);
   user-select: none;
 }
 

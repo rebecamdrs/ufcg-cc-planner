@@ -1,5 +1,18 @@
 .container-principal {
-  padding: 3rem 2.5rem;
-  max-width: 100%;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1.5rem 2rem 0.5rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.container-periodos {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto; 
+  overflow-y: auto; 
+  align-items: flex-start;
+  padding-bottom: 0.5rem;
 }
