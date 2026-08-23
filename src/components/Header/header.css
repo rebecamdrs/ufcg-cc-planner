@@ -1,13 +1,14 @@
 .header-app {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0.25rem 0;
 }
 
 .titulo-principal {
   font-family: var(--font-title);
-  font-size: 4rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--text-title);
   margin: 0;
@@ -19,40 +20,40 @@
 .tag-header {
   font-family: var(--font-mono);
   font-weight: 700;
+  font-size: 0.75rem;
   color: var(--accent-cc);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   display: block;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
   user-select: none;
 }
 
 .botoes-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .botao-reset {
   background-color: var(--accent-cc);
-  border-radius: 18px;
-  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  padding: 0.4rem 0.85rem;
   user-select: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(33, 39, 53, 0);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 0.85rem;
+  font-weight: 700;
+  font-size: 0.8rem;
   color: #ffffff;
   border: 1px solid transparent;
   cursor: pointer;
   outline: none;
-  height: 44px;
-  width: 146px;
+  height: 36px;
   box-sizing: border-box;
 }
 
@@ -71,8 +72,7 @@
   background-color: var(--bg-card);
   color: var(--text-body);
   border: 1px solid var(--border-card);
-  height: 44px;
-  width: 146px;
+  height: 36px;
   box-sizing: border-box;
 }
 
@@ -90,26 +90,28 @@
 }
 
 @media (max-width: 900px), (max-height: 500px) and (orientation: landscape) {
-  .header-container,
-  header {
-    padding: 0.25rem 0.75rem !important;
-    min-height: unset !important;
+  .header-app {
+    margin-bottom: 0.4rem;
+    padding: 0;
   }
 
-  .header-titulo,
-  h1 {
-    font-size: 1rem !important;
-    margin: 0 !important;
+  .tag-header {
+    font-size: 0.6rem;
+    margin-bottom: 0.1rem;
   }
 
-  .header-subtitulo,
-  p {
-    font-size: 0.7rem !important;
+  .titulo-principal {
+    font-size: 1.25rem;
   }
 
-  .header-acoes button,
-  .btn-header {
-    padding: 2px 6px !important;
-    font-size: 0.65rem !important;
+  .botoes-header {
+    gap: 0.35rem;
+  }
+
+  .botao-reset {
+    height: 28px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 8px;
   }
 }
