@@ -13,8 +13,6 @@ import { useToasts } from "./hooks/useToasts.jsx"
 import "./App.css"
 
 export default function App() {
-
-    // guarda a cadeira que o mouse ta em cima
     const [cadeiraSelecionada, setCadeiraSelecionada] = useState(null)
 
     const { dispararToastErro, dispararToastAlerta } = useToasts()
@@ -26,6 +24,10 @@ export default function App() {
     )
 
     const { grade, resetarGrade, resetarMantendoOptativas, handleTrocarOptativa, moverCadeira } = useGrade({ cadeiras, cadeirasPagas, buscarCadeira, dispararToastErro })
+
+    const optativasEscolhidas = Object.values(grade)
+        .flat()
+        .filter((nome) => nome && !nome.startsWith("Optativa"))
 
     const handleResetTotal = () => {
         limparCadeirasPagas()
@@ -52,6 +54,7 @@ export default function App() {
                         cadeiraSelecionada={cadeiraSelecionada}
                         setCadeiraSelecionada={setCadeiraSelecionada}
                         listaOptativas={listaOptativasDisponiveis}
+                        optativasEscolhidas={optativasEscolhidas}
                         onTrocarOptativa={handleTrocarOptativa}
                         cadeirasPagas={cadeirasPagas}
                         pagarCadeira={pagarCadeira}

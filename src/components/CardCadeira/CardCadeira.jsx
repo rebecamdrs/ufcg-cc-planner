@@ -8,6 +8,7 @@ export function CardCadeira({
     setCadeiraSelecionada,
     excesso,
     listaOptativas = [],
+    optativasEscolhidas = [],
     onSelecionarOptativa,
     cadeirasPagas,
     pagarCadeira
@@ -19,7 +20,6 @@ export function CardCadeira({
     const [menuAberto, setMenuAberto] = useState(false);
     const dropdownRef = useRef(null);
 
-    // Identifica se é um slot de optativa ou uma matéria optativa já selecionada
     const ehOptativa =
         cadeira.nome.startsWith("Optativa") ||
         listaOptativas.some((item) => item.nome === cadeira.nome);
@@ -93,12 +93,11 @@ export function CardCadeira({
             className={`card-cadeira ${statusClass} ${ehOptativa ? "card-optativa-slot" : ""} ${foiPaga ? 'card-paga' : ''}`}
             style={{
                 position: 'relative',
-                cursor: 'grab', // permite o cursor de arrastar
+                cursor: 'grab',
                 zIndex: menuAberto ? 50 : 1
             }}
-            draggable={!menuAberto && !foiPaga} // só desativa o arrasto se a listinha estiver aberta
+            draggable={!menuAberto && !foiPaga}
             onClick={() => {
-                // se for uma optativa sem cadeira escolhida abre o dropdown
                 if (cadeira.nome.startsWith("Optativa")) {
                     setMenuAberto((prev) => !prev);
                 } else {
@@ -152,6 +151,8 @@ export function CardCadeira({
             {ehOptativa && menuAberto && (
                 <DropdownOptativas
                     listaOptativas={listaOptativas}
+                    optativasEscolhidas={optativasEscolhidas}
+                    valorAtual={cadeira.nome}
                     onSelecionar={onSelecionarOptativa}
                     onClose={() => setMenuAberto(false)}
                 />
