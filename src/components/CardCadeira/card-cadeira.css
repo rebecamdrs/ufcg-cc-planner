@@ -13,6 +13,7 @@
     gap: 0.8rem;
     box-sizing: border-box;
     position: relative;
+    overflow: visible;
 }
 
 .card-cadeira:hover {
@@ -29,6 +30,8 @@
     line-height: 1.3;
     margin: 0;
     user-select: none;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 /* --- ESTADOS DO CARD --- */
@@ -217,5 +220,35 @@
     .aviso-status {
         font-size: 0.5rem;
         padding: 1px 3px;
+    }
+}
+
+/* Monitores Full HD e superiores (1200px+) */
+@media (min-width: 1200px) {
+    .card-cadeira {
+        padding: 0.9rem 1rem;
+        border-radius: 14px;
+        gap: 0.5rem;
+    }
+
+    .titulo-cadeira {
+        font-size: 0.92rem;
+        /* Aumenta a leitura */
+        line-height: 1.3;
+    }
+
+    .badge-subtexto-card {
+        font-size: 0.65rem;
+    }
+
+    .aviso-status {
+        font-size: 0.65rem;
+        height: 18px;
+    }
+
+    .bolinha-alerta {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
     }
 }

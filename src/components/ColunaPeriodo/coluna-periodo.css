@@ -125,3 +125,19 @@
         width: 100% !important;
     }
 }
+
+/* Permite que as colunas cresçam no monitor */
+@media (min-width: 1200px) {
+    .coluna-periodo-wrapper {
+        min-width: 175px;
+        max-width: 210px;
+    }
+
+    .titulo-periodo {
+        font-size: 1.15rem;
+    }
+
+    .contagem-cadeiras {
+        font-size: 0.8rem;
+    }
+}
