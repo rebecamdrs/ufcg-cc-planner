@@ -101,3 +101,11 @@
     padding-bottom: 4rem !important;
   }
 }
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .coluna-periodo {
+    min-height: 80vh !important; 
+    border-radius: 20px !important;
+    padding: 0.75rem !important;
+  }
+}
