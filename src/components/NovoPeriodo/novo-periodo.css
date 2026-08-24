@@ -52,3 +52,33 @@
   color: var(--accent-cc);
   opacity: 0.85;
 }
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .zona-novo-periodo {
+    width: 140px;
+    min-width: 140px;
+    padding: 1rem 0.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+  }
+
+  .subtexto-zona {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .zona-novo-periodo {
+    width: 82px;
+    min-width: 82px;
+    padding: 0.5rem 0.2rem;
+    border-radius: 8px;
+    margin-top: 1.1rem;
+    font-size: 0.6rem;
+  }
+
+  .subtexto-zona {
+    font-size: 0.5rem;
+  }
+}
