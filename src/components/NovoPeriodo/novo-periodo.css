@@ -55,19 +55,12 @@
 
 @media (max-width: 768px) and (orientation: portrait) {
   .zona-novo-periodo {
-    width: 140px !important;
-    min-width: 140px !important;
-    max-width: 140px !important;
-    padding: 1.5rem 0.5rem !important;
-    border-radius: 20px !important;
-    margin-top: 2.35rem !important; 
-    min-height: 80vh !important;
-    align-self: stretch !important;
-    font-size: 0.8rem !important;
-  }
-
-  .subtexto-zona {
-    font-size: 0.65rem !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: 80px !important;
+    height: auto !important;
+    margin-top: 0 !important;
   }
 }
 

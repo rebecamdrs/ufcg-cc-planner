@@ -92,7 +92,7 @@
     padding: 0.3rem;
     border-radius: 8px;
     gap: 0.35rem;
-    min-height: auto;
+    min-height: 80vh !important;
   }
 }
 
@@ -103,9 +103,23 @@
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
+  /* Empilha os períodos verticalmente */
+  .container-periodos {
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    width: 100% !important;
+    padding: 0 1rem 4rem 1rem !important;
+    gap: 1.5rem !important;
+  }
+
+  .coluna-periodo-wrapper {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+
   .coluna-periodo {
-    min-height: 80vh !important; 
-    border-radius: 20px !important;
-    padding: 0.75rem !important;
+    min-height: 80px !important;
+    width: 100% !important;
   }
 }
