@@ -10,7 +10,7 @@
 .container-periodos {
   flex: 1;
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   overflow-x: auto; 
   overflow-y: auto; 
   align-items: flex-start;

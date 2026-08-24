@@ -66,7 +66,7 @@ html, body, #root {
     align-items: center;
     width: 100%;
     max-width: fit-content;
-    padding: 1rem 1rem;
+    padding: 0.8rem;
     background-color: var(--bg-alert-red);
     border-radius: 16px;
     box-shadow: 0 8px 12px rgba(182, 182, 182, 0.15);
@@ -102,14 +102,14 @@ html, body, #root {
 .toast-titulo {
     font-family: var(--font-mono);
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 0.7rem;
     color: var(--alert-red);
     margin-bottom: 2px;
 }
 
 .toast-mensagem {
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: var(--text-dark-red);
     line-height: 1.3;
 }

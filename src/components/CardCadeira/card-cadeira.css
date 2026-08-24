@@ -3,15 +3,16 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border-card);
     border-radius: 18px;
-    padding: 1.3rem;
+    padding: 1rem;
     cursor: grab;
     user-select: none;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 4px 12px rgba(33, 39, 53, 0);
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.8rem;
     box-sizing: border-box;
+    position: relative;
 }
 
 .card-cadeira:hover {
@@ -22,7 +23,7 @@
 
 .titulo-cadeira {
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-title);
     line-height: 1.3;
@@ -85,7 +86,7 @@
     display: block;
     font-family: var(--font-mono);
     font-weight: 700;
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -111,7 +112,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 900;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(63, 14, 14, 0.25);
@@ -134,7 +135,7 @@
     gap: 0.25rem;
     line-height: 1;
     padding-bottom: 1px;
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     font-weight: 800;
     font-family: var(--font-mono);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
@@ -197,23 +198,24 @@
     opacity: 1;
 }
 
-@media (max-width: 900px), (max-height: 500px) and (orientation: landscape) {
-  .card-cadeira {
-    padding: 4px 6px;
-    border-radius: 6px;
-  }
+@media (max-width: 900px),
+(max-height: 500px) and (orientation: landscape) {
+    .card-cadeira {
+        padding: 4px 6px;
+        border-radius: 6px;
+    }
 
-  .titulo-cadeira {
-    font-size: 0.65rem;
-    line-height: 1.15;
-  }
+    .titulo-cadeira {
+        font-size: 0.65rem;
+        line-height: 1.15;
+    }
 
-  .badge-subtexto-card {
-    font-size: 0.55rem;
-  }
+    .badge-subtexto-card {
+        font-size: 0.55rem;
+    }
 
-  .aviso-status {
-    font-size: 0.5rem;
-    padding: 1px 3px;
-  }
+    .aviso-status {
+        font-size: 0.5rem;
+        padding: 1px 3px;
+    }
 }

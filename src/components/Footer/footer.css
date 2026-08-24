@@ -7,7 +7,7 @@
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
   border: 1px solid var(--border-card);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-family: var(--font-body);
   color: var(--text-body);
   display: flex;
