@@ -28,12 +28,16 @@
 
 @media (max-width: 900px), (max-height: 500px) {
   .rodape-autores {
-    align-self: center; 
-    margin: 1rem auto 1.5rem auto; 
-    font-size: 0.65rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: 12px;
-    z-index: 20;
-    position: relative;
+    position: fixed !important;
+    bottom: 8px !important;
+    right: 8px !important;
+    margin: 0 !important;
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.6rem !important;
+    border-radius: 10px !important;
+    z-index: 9999 !important;
+    backdrop-filter: blur(8px) !important;
+    background-color: var(--bg-card) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   }
 }
