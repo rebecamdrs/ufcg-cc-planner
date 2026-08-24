@@ -62,6 +62,7 @@
         min-height: 80px !important;
         height: auto !important;
         margin-top: 0 !important;
+        border-radius: 16px;
     }
 }
 

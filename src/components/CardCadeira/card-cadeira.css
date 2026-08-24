@@ -204,8 +204,8 @@
 @media (max-width: 900px),
 (max-height: 500px) and (orientation: landscape) {
     .card-cadeira {
-        padding: 4px 6px;
-        border-radius: 6px;
+        padding: 8px 10px;
+        border-radius: 12px;
     }
 
     .titulo-cadeira {
@@ -214,7 +214,8 @@
     }
 
     .badge-subtexto-card {
-        font-size: 0.55rem;
+        font-size: 0.5rem;
+        font-weight: 500;
     }
 
     .aviso-status {

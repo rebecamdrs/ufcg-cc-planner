@@ -110,19 +110,29 @@
         flex-direction: column !important;
         overflow-x: visible !important;
         width: 100% !important;
-        padding: 0 1rem 4rem 1rem !important;
-        gap: 1.5rem !important;
+        gap: 1.8rem !important;
     }
 
     .coluna-periodo-wrapper {
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
+        gap: 12px;
+    }
+
+    .titulo-periodo {
+        font-size: 0.85rem;
+    }
+
+    .contagem-cadeiras {
+        font-size: 0.7rem;
     }
 
     .coluna-periodo {
         min-height: 80px !important;
         width: 100% !important;
+        border-radius: 16px;
+        padding: 0.5rem;
     }
 }
 
